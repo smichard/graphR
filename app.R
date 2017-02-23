@@ -8,18 +8,18 @@ ui <- dashboardPage(
   dashboardHeader(title = "graphr"),
   dashboardSidebar(
     sidebarMenu(
-      menuItem("Dashboard", tabName = "dashboard", icon = icon("th-list")),
-      menuItem("Widgets", tabName = "widgets", icon = icon("cloud"))
+      menuItem("RV Tools", tabName = "tab_rv", icon = icon("th-list")),
+      menuItem("SFDC", tabName = "tab_sfdc", icon = icon("cloud"))
     )
   ),
   ## Body content
   dashboardBody(
     tabItems(
       # First tab content
-      tabItem(tabName = "dashboard",
+      tabItem(tabName = "tab_rv",
               fluidPage(
                         # Application title.
-                        titlePanel("project.Name"),
+                        titlePanel("RV Tools"),
                         shinyjs::useShinyjs(),
                         
                         sidebarLayout(
@@ -53,10 +53,10 @@ ui <- dashboardPage(
       ),
       
       # Second tab content
-      tabItem(tabName = "widgets",
+      tabItem(tabName = "tab_sfdc",
               fluidPage(
                         # Application title.
-                        titlePanel("project.graphr"),
+                        titlePanel("SFDC"),
                         shinyjs::useShinyjs(),
                         
                         sidebarLayout(

@@ -32,6 +32,7 @@ server_rv <- function(input, output) {
     dc_list <- unique(data_sub$Datacenter)
     
     if(length(dc_list) > 1){
+      data_overview <- get_stats_overview(data_sub)
       data_list <- list()
       for(i in 1:length(dc_list)){
         df <- data_sub %>%
@@ -117,6 +118,7 @@ server_rv <- function(input, output) {
                authorName = ifelse(input$author_rv =="Author of the Report","Name",as.character(input$author_rv)),
                documDate = Sys.Date())
     
+    
     #main part
     slideText("Find herein a summary of the provided RV_Tools.  
               The following profiles were considered:  
@@ -126,6 +128,9 @@ server_rv <- function(input, output) {
               "Introduction", pathImg = "./backgrounds/main_slide_external.PNG")
     
     # Tables
+    if(length(dc_list) > 1){
+      generate_overview_slide(data_overview)
+    }
     generate_slides(data_comp, plot_comp)
     
     if(length(dc_list) > 1){

@@ -312,8 +312,8 @@ slideText <- function(slideText, slideTitle, brandName = NULL,
 # This function creates first slide with title, author and date, all three
 # parameters have default values, you just need to include them explicitly if
 # you want to modify them.
-slideFirst <- function(titleName ="Overview of my current projects", 
-                       authorName = "Stephan Michard",
+slideFirst <- function(titleName ="Report", 
+                       authorName = "Author",
                        documDate = Sys.Date(),
                        includeImg = TRUE,
                        pathImg = "./backgrounds/first_slide.PNG") {
