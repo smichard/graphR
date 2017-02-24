@@ -46,7 +46,7 @@ get_stats <- function(df){
 get_stats_overview <- function(df){
   overview <- df %>%
     group_by(Datacenter) %>%
-    summarise(VM_Count = n(), CPU_Count = sum(CPU), Memory_Count = round(sum(Memory)/1000, 1), Storage_Occupied = round(sum(In_Use_MB)/1000, 1),
+    summarise(Host_Count = n_distinct(Host), VM_Count = n(), CPU_Count = sum(CPU), Memory_Count = round(sum(Memory)/1000, 1), Storage_Occupied = round(sum(In_Use_MB)/1000, 1),
               Storage_Provisioned = round(sum(Provisioned_MB)/1000, 1), thin_thick_ratio = round(Storage_Occupied/Storage_Provisioned*100 ,1)) %>%
     arrange(desc(CPU_Count))
   return(overview)
@@ -132,8 +132,8 @@ generate_slides <- function(df, plot_list, praefix = "comp"){
 
 generate_overview_slide <- function(df){
   # table all values
-  tmp <- as.data.frame(df[, c("Datacenter", "VM_Count", "CPU_Count", "Memory_Count", "Storage_Occupied", "Storage_Provisioned", "thin_thick_ratio")])
-  colnames(tmp) <- c("Datacenter", "# VM's", "# vCPU's", "Memory [GB]", "Occupied Storage [GB]", "Provisioned Storage [GB]", "Thin / Thick Ratio [%]")
+  tmp <- as.data.frame(df[, c("Datacenter", "Host_Count","VM_Count", "CPU_Count", "Memory_Count", "Storage_Occupied", "Storage_Provisioned", "thin_thick_ratio")])
+  colnames(tmp) <- c("Datacenter", "# Hosts", "# VM's", "# vCPU's", "Memory [GB]", "Occupied Storage [GB]", "Provisioned Storage [GB]", "Thin / Thick Ratio [%]")
   slideTable(tmp, paste("Overview for ", nrow(df), " Datacenter", sep=""), pathImg = "./backgrounds/main_slide_external.PNG")
 }
 
