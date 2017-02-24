@@ -1,0 +1,22 @@
+.main-header .logo {
+  font-family: "Calibri", "Arial";
+  font-weight: bold;
+  font-size: 24px;
+  color: red;
+}
+
+.well {
+	background-color: white;
+}
+
+.input-group-btn{
+	background-color: #ecf0f5
+}
+
+#Generate_rv {
+	background-color: #ecf0f5;
+}
+
+#Generate_sfdc {
+	background-color: #ecf0f5;
+}

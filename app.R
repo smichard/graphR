@@ -5,7 +5,7 @@ source("server_sfdc.R")
 
 
 ui <- dashboardPage(
-  dashboardHeader(title = "graphr"),
+  dashboardHeader(title = "graphr."),
   dashboardSidebar(
     sidebarMenu(
       menuItem("RV Tools", tabName = "tab_rv", icon = icon("th-list")),
@@ -17,7 +17,7 @@ ui <- dashboardPage(
     tabItems(
       # First tab content
       tabItem(tabName = "tab_rv",
-              fluidPage(
+              fluidPage(theme = "custom.css",
                         # Application title.
                         titlePanel("RV Tools"),
                         shinyjs::useShinyjs(),
