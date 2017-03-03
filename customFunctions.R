@@ -60,7 +60,7 @@ generate_plots <- function(df, raw_df, praefix = "comp"){
   # Plot Power Status
   tmp <- df[, c("Description", "VM_Count", "n_VMs_on", "n_VMs_off")]
   tmp <- melt(tmp ,  id='Description', value.name='Count', variable.name = 'Type')
-  plot_list[[length(plot_list)+1]] <- designPlot(ggplot(tmp, aes(x=Description, y=Count, fill=Type)) + geom_bar(stat="identity", width=.7, position = "dodge") + xlab("VM Profile") + ylab("Number of VM's") + scale_fill_brewer(palette = "Set2", name ="", labels=c("Number of VM's", "VM's powered on", "VM's powered off")))
+  plot_list[[length(plot_list)+1]] <- designPlot(ggplot(tmp, aes(x=Description, y=Count, fill=factor(Type, levels = c("n_VMs_off", "n_VMs_on", "VM_Count")))) + geom_bar(stat="identity", width=.7, position = "dodge") + xlab("VM Profile") + ylab("Number of VM's") + scale_fill_manual(values=c("#fc8d62", "#66c2a5", "#377eb8"), name ="", labels=c("VM's powered off", "VM's powered on", "Total Number of VM's")))
   
   # Plot CPU Density
   if(praefix != "comp"){
@@ -103,7 +103,7 @@ generate_slides <- function(df, plot_list, praefix = "comp"){
     
     slidePlot(plot_list[[4]], "Distribution of Memory for all VM's", pathImg = "./backgrounds/main_slide_external.PNG")
     
-    slidePlot(plot_list[[5]], "Distribution of occupied and provisioned storage for all VM's", pathImg = "./backgrounds/main_slide_external.PNG")
+    slidePlot(plot_list[[5]], "Distribution of occup. and provis. storage for all VM's", pathImg = "./backgrounds/main_slide_external.PNG")
     
   }else{
     slideChapter(paste("Summary for Datacenter: ", praefix, ""))
@@ -126,7 +126,7 @@ generate_slides <- function(df, plot_list, praefix = "comp"){
     
     slidePlot(plot_list[[4]], paste("Distribution of Memory for all VM's - ", praefix, ""), pathImg = "./backgrounds/main_slide_external.PNG")
     
-    slidePlot(plot_list[[5]], paste("Distribution of occupied and provisioned storage for all VM's - ", praefix, ""), pathImg = "./backgrounds/main_slide_external.PNG")
+    slidePlot(plot_list[[5]], paste("Distribution of occup. and provis. storage for all VM's - ", praefix, ""), pathImg = "./backgrounds/main_slide_external.PNG")
   }  
 }
 
@@ -149,11 +149,6 @@ get_vertices <- function(var_list){
 }
 
 # exclusiv sfdc
-adjustHeaderOld <- function(data){
-  colnames(data) <- c("Opportunity Name", "Account Name", "Forecast Currency", "Forecast Amount1", "Forecast Currency USD", "Forecast Amount", "Forecast Status", "Close Date", "Account Owner", "Primary SE", "Solution Win", "Solution Win Comments", "Service Comments", "Manager Comments", "PreSales Speciality", "Speciality Engagement", "Products", "Won", "Closed")
-  return(data)
-}
-
 adjustHeader <- function(data){
   colnames(data) <- gsub("_", " ", colnames(data))
   return(data)
@@ -166,11 +161,6 @@ designPlot <- function(plotVar){
                              axis.title.y = element_text(face="bold", size=22, margin=margin(20,15,0,0)),
                              axis.text.y  = element_text(vjust=0.5, size=18))
   return(plotVar)
-}
-
-orderDataframe <- function(df){
-  df <- df[order(df$Forecast_Amount_USD, decreasing = TRUE), ]
-  return(df)
 }
 
 formatDataframe <- function(df){

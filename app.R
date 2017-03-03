@@ -5,7 +5,7 @@ source("server_sfdc.R")
 
 
 ui <- dashboardPage(
-  dashboardHeader(title = "graphr."),
+  dashboardHeader(title = "graphR."),
   dashboardSidebar(
     sidebarMenu(
       menuItem("RV Tools", tabName = "tab_rv", icon = icon("th-list")),

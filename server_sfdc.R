@@ -20,27 +20,20 @@ server_sfdc <- function(input, output) {
     data_sfdc$Forecast_Amount_USD <- round(data_sfdc$Forecast_Amount_USD, 0)
     
     
-    # create subsets, commit, closed, booked, upside
-    data.commit <- subset(data_sfdc, Forecast_Status == "Commit")
-    data.upside <- subset(data_sfdc, Forecast_Status == "Upside")
-    data.closed <- subset(data_sfdc, Forecast_Status == "Closed")
-    data.booked <- subset(data_sfdc, Forecast_Status == "Booked")
-    data.won <- subset(data_sfdc, Forecast_Status == "Won")
-    data.lost <- subset(data_sfdc, Forecast_Status == "Lost")
-    
-    
-    # order data frames
-    data.commit <- orderDataframe(data.commit)
-    data.upside <- orderDataframe(data.upside)
-    data.closed <- orderDataframe(data.closed)
-    data.booked <- orderDataframe(data.booked)
-    data.won <- orderDataframe(data.won)
-    data.lost <- orderDataframe(data.lost)
-    
+    # create subsets, commit, closed, booked, upside, Won, Lost
+    fcs_list <- unique(data_sfdc$Forecast_Status)
+    data_status_list <- list()
+    for(i in 1:length(fcs_list)){
+      df <- data_sfdc %>%
+        filter(Forecast_Status == fcs_list[i]) %>%
+        arrange(desc(Forecast_Amount_USD))
+      data_status_list[[length(data_status_list)+1]] <- df
+      names(data_status_list)[i] <- as.character(fcs_list[i])
+      i <- i + 1
+    }
     
     # calculate Amount for each Forecast Status
-    # summary.forecastStatus <- ddply(data, "Forecast_Status", summarize, Forecast_Amount_USD = sum(Forecast_Amount_USD))
-    summary.forecastStatus <- data_sfdc %>% group_by(Forecast_Status) %>% summarise(Forecast_Amount_USD = sum(Forecast_Amount_USD))
+    summary.forecastStatus <- data_sfdc %>% group_by(Forecast_Status) %>%  summarise(Forecast_Amount_USD = sum(Forecast_Amount_USD))
     summary.forecastStatus$Forecast_Status <- factor(fct_relevel(summary.forecastStatus$Forecast_Status, "Commit", "Upside", "Won", "Lost", "Closed", "Booked"))
     
     # Plot Forecast Amount for each Forecast Status
@@ -49,7 +42,6 @@ server_sfdc <- function(input, output) {
     #forecast.plot
     
     # calculate Frequency for each Forecast Status
-    #summary.frequencyStatus <- ddply(data, "Forecast_Status", summarize, Frequency_Status = length(Forecast_Status))
     summary.frequencyStatus <- data_sfdc %>% group_by(Forecast_Status) %>% summarise(Frequency_Status = length(Forecast_Status))
     summary.frequencyStatus$Forecast_Status <- factor(fct_relevel(summary.frequencyStatus$Forecast_Status, "Commit", "Upside", "Won", "Lost", "Closed", "Booked"))
     
@@ -60,11 +52,9 @@ server_sfdc <- function(input, output) {
     
     
     # calculate Frequency for each Primary SE
-    #summary.frequencySE <- ddply(data, "Primary_SE", summarize, Frequency_SE = length(Primary_SE))
     summary.frequencySE <- data_sfdc %>% group_by(Primary_SE) %>% summarise(Frequency_SE = length(Primary_SE))
     
-    
-    # Plot Frequency for each Account Manager
+    # Plot Frequency for each Primary SE
     frequencySE.plot <- ggplot(data=summary.frequencySE, aes(x=Primary_SE, y=Frequency_SE, fill=Primary_SE)) + scale_fill_brewer(palette = "Set2") + geom_bar(stat="identity", width=.7)  + xlab("Primary SE") + ylab("Number of Projects") + geom_text(aes(label=Frequency_SE), vjust=1.6, color="white", size=5.5, fontface="bold") + guides(fill=FALSE)
     frequencySE.plot <- designPlot(frequencySE.plot)
     #frequencySE.plot
@@ -72,14 +62,10 @@ server_sfdc <- function(input, output) {
     # calculate Frequency for each Account Manager
     # if Statement to distinguish how many Primary SE are contained in dataset
     if(nrow(summary.frequencySE) == 1){
-      #summary.frequencyAM <- ddply(data, "Account_Owner", summarize, Frequency_AM = length(Account_Owner))
       summary.frequencyAM <- data_sfdc %>% group_by(Account_Owner) %>% summarise(Frequency_AM = length(Account_Owner))
       frequencyAM.plot <- ggplot(data=summary.frequencyAM, aes(x=Account_Owner, y=Frequency_AM, fill=Account_Owner)) + scale_fill_brewer(palette = "Set2") + geom_bar(stat="identity", width=.7)  + xlab("Account Manager") + ylab("Number of Projects") + geom_text(aes(label=Frequency_AM), vjust=1.6, color="white", size=5.5, fontface="bold") + guides(fill=FALSE)
     }else if(nrow(summary.frequencySE) > 1){
-      #summary.frequencyAM <- ddply(data, c("Account_Owner", "Primary_SE"), summarise, Frequency_AM=length(result=="Account_Owner"))
-      #summary.frequencyAM <- count(data, c('Account_Owner', 'Primary_SE'))
       summary.frequencyAM <- data_sfdc %>% group_by(Account_Owner, Primary_SE) %>% summarise(Frequency_AM=n())
-      
       colnames(summary.frequencyAM) <- c('Account_Owner', 'Primary_SE', 'Frequency_AM')
       frequencyAM.plot <- ggplot(data=summary.frequencyAM, aes(x=Account_Owner, y=Frequency_AM, fill=Primary_SE)) +
         geom_bar(stat="identity", position=position_dodge(), width=.7) + xlab("Account Manager") + ylab("Number of Projects") + scale_fill_discrete(name="Primary SE")
@@ -89,55 +75,51 @@ server_sfdc <- function(input, output) {
     
     
     # calculate Revenue for each Primary SE, booked projects
-    # summary.revenueSE <- ddply(data.booked, "Primary_SE", summarize, Revenue_SE_USD = sum(Forecast_Amount_USD))
-    summary.revenueSE <- data.booked %>% group_by(Primary_SE) %>% summarise(Revenue_SE_USD = sum(Forecast_Amount_USD))
-    
-    # Plot Frequency for each Account Manager
-    revenueSE.plot <- ggplot(data=summary.revenueSE, aes(x=Primary_SE, y=Revenue_SE_USD, fill=Primary_SE)) + scale_fill_brewer(palette = "Set2") + geom_bar(stat="identity", width=.7)  + xlab("Primary SE") + ylab("Revenue of booked Projects in USD") + scale_y_continuous(labels = scales::format_format(big.mark = ".", decimal.mark = ",", scientific = FALSE)) + geom_text(aes(label=Revenue_SE_USD), vjust=1.6, color="white", size=5.5, fontface="bold") + guides(fill=FALSE)
-    revenueSE.plot <- designPlot(revenueSE.plot)
-    #revenueSE.plot
+    if(!is.null(data_status_list[["Booked"]])){
+      summary.revenueSE <- data_status_list$Booked %>% group_by(Primary_SE) %>% summarise(Revenue_SE_USD = sum(Forecast_Amount_USD))
+      
+      # Plot Frequency for each Account Manager
+      revenueSE.plot <- ggplot(data=summary.revenueSE, aes(x=Primary_SE, y=Revenue_SE_USD, fill=Primary_SE)) + scale_fill_brewer(palette = "Set2") + geom_bar(stat="identity", width=.7)  + xlab("Primary SE") + ylab("Revenue of booked Projects in USD") + scale_y_continuous(labels = scales::format_format(big.mark = ".", decimal.mark = ",", scientific = FALSE)) + geom_text(aes(label=Revenue_SE_USD), vjust=1.6, color="white", size=5.5, fontface="bold") + guides(fill=FALSE)
+      revenueSE.plot <- designPlot(revenueSE.plot)
+      #revenueSE.plot
+    }
     
     # calculate Revenue for each Primary SE, closed projects
     #summary.revenueSE2 <- ddply(data.closed, "Primary_SE", summarize, Revenue_SE_USD = sum(Forecast_Amount_USD))
-    summary.revenueSE2 <- data.closed %>% group_by(Primary_SE) %>% summarise(Revenue_SE_USD = sum(Forecast_Amount_USD))
-    
-    
-    # Plot Frequency for each Account Manager
-    revenueSE2.plot <- ggplot(data=summary.revenueSE2, aes(x=Primary_SE, y=Revenue_SE_USD, fill=Primary_SE)) + scale_fill_brewer(palette = "Set2") + geom_bar(stat="identity", width=.7)  + xlab("Primary SE") + ylab("Revenue of closed Projects in USD") + scale_y_continuous(labels = scales::format_format(big.mark = ".", decimal.mark = ",", scientific = FALSE)) + geom_text(aes(label=Revenue_SE_USD), vjust=1.6, color="white", size=5.5, fontface="bold") + guides(fill=FALSE)
-    revenueSE2.plot <- designPlot(revenueSE2.plot)
-    #revenueSE2.plot
+    # adjust
+    if(!is.null(data_status_list[["Closed"]])){
+      summary.revenueSE2 <- data_status_list$Closed %>% group_by(Primary_SE) %>% summarise(Revenue_SE_USD = sum(Forecast_Amount_USD))
+      
+      # Plot Frequency for each Account Manager
+      revenueSE2.plot <- ggplot(data=summary.revenueSE2, aes(x=Primary_SE, y=Revenue_SE_USD, fill=Primary_SE)) + scale_fill_brewer(palette = "Set2") + geom_bar(stat="identity", width=.7)  + xlab("Primary SE") + ylab("Revenue of closed Projects in USD") + scale_y_continuous(labels = scales::format_format(big.mark = ".", decimal.mark = ",", scientific = FALSE)) + geom_text(aes(label=Revenue_SE_USD), vjust=1.6, color="white", size=5.5, fontface="bold") + guides(fill=FALSE)
+      revenueSE2.plot <- designPlot(revenueSE2.plot)
+      #revenueSE2.plot
+    }
     
     # calculate Revenue for each Primary SE, won projects
-    #summary.revenueSE3 <- ddply(data.won, "Primary_SE", summarize, Revenue_SE_USD = sum(Forecast_Amount_USD))
-    summary.revenueSE3 <- data.won %>% group_by(Primary_SE) %>% summarise(Revenue_SE_USD = sum(Forecast_Amount_USD))
-    
-    # Plot Frequency for each Account Manager
-    revenueSE3.plot <- ggplot(data=summary.revenueSE3, aes(x=Primary_SE, y=Revenue_SE_USD, fill=Primary_SE)) + scale_fill_brewer(palette = "Set2") + geom_bar(stat="identity", width=.7)  + xlab("Primary SE") + ylab("Revenue of Won Projects in USD") + scale_y_continuous(labels = scales::format_format(big.mark = ".", decimal.mark = ",", scientific = FALSE)) + geom_text(aes(label=Revenue_SE_USD), vjust=1.6, color="white", size=5.5, fontface="bold") + guides(fill=FALSE)
-    revenueSE3.plot <- designPlot(revenueSE3.plot)
-    #revenueSE3.plot
+    # adjust
+    if(!is.null(data_status_list[["Won"]])){
+      summary.revenueSE3 <- data_status_list$Won %>% group_by(Primary_SE) %>% summarise(Revenue_SE_USD = sum(Forecast_Amount_USD))
+      
+      # Plot Frequency for each Account Manager
+      revenueSE3.plot <- ggplot(data=summary.revenueSE3, aes(x=Primary_SE, y=Revenue_SE_USD, fill=Primary_SE)) + scale_fill_brewer(palette = "Set2") + geom_bar(stat="identity", width=.7)  + xlab("Primary SE") + ylab("Revenue of Won Projects in USD") + scale_y_continuous(labels = scales::format_format(big.mark = ".", decimal.mark = ",", scientific = FALSE)) + geom_text(aes(label=Revenue_SE_USD), vjust=1.6, color="white", size=5.5, fontface="bold") + guides(fill=FALSE)
+      revenueSE3.plot <- designPlot(revenueSE3.plot)
+      #revenueSE3.plot
+    }
     
     # calculating solution win comments, number of projects commit/upside, number of projects without evalutation, number of evaluted projects
-    data.commit.win <- subset(data.commit, Forecast_Amount_USD > 249000)
-    data.upside.win <- subset(data.upside, Forecast_Amount_USD > 249000)
-    win.projects <- nrow(data.commit.win) + nrow(data.upside.win)
-    win.missing <- sum(is.na(data.commit.win$Solution_Win_Comments)) + sum(is.na(data.upside.win$Solution_Win_Comments))
-    win.evalutated <- win.projects - win.missing
+    summary.solutionWin <- data_sfdc %>%
+      filter(((Forecast_Status == "Commit") | (Forecast_Status == "Upside")) & Forecast_Amount_USD > 249000) %>%
+      summarise(EvaluatedProjects = sum(!is.na(Solution_Win_Comments)), MissingEvaluation = sum(is.na(Solution_Win_Comments)))
+    summary.solutionWin <- melt(summary.solutionWin, value.name = "value")
     
-    summary.solutionWin <- data.frame(
-      group = c("Evaluated Projects","Missing Evaluation"),
-      if(win.projects == 0){
-        value = c(1, 0)
-      }else{
-        value = c(win.evalutated, win.missing)
-      }
-    )
-    
-    # Plotting Solution Win Comments
-    solutionWin.plot <- ggplot(summary.solutionWin, aes(x="", y=value, fill=group)) +
+    solutionWin.plot <- ggplot(summary.solutionWin, aes(x="", y=value, fill=variable)) +
       geom_bar(width = 1, stat = "identity") + coord_polar("y", start=pi/5) +
       scale_fill_manual(values=c("#009E73", "#D55E00")) + theme_void() +
-      theme(legend.title=element_blank(), legend.position="bottom", legend.text = element_text(size = 16))
-    #geom_text(aes(label=value), vjust=-0.7, color="white", size=6.5, fontface="bold")
+      theme(legend.title=element_blank(), legend.position="bottom", legend.text = element_text(size = 16)) 
+    # geom_text(aes(label=value), vjust=-0.7, color="white", size=6.5, fontface="bold")
+    #solutionWin.plot
+    
     
     # calculate product mix
     #summary.productMix <- ddply(data, "Products", summarize, Product_Counts = length(Products))
@@ -150,21 +132,11 @@ server_sfdc <- function(input, output) {
     productMix.plot <- productMix.plot + theme(axis.text.x=element_blank(), axis.ticks.x=element_blank())
     #productMix.plot
     
-    # set proper format
-    data.commit <- formatDataframe(data.commit)
-    data.upside <- formatDataframe(data.upside)
-    data.closed <- formatDataframe(data.closed)
-    data.booked <- formatDataframe(data.booked)
-    data.won <- formatDataframe(data.won)
-    data.lost <- formatDataframe(data.lost)
+    # set proper format, function
+    data_status_list <- lapply(data_status_list, formatDataframe)
     
     # rename dataframe header
-    data.commit <- adjustHeader(data.commit)
-    data.upside <- adjustHeader(data.upside)
-    data.closed <- adjustHeader(data.closed)
-    data.booked <- adjustHeader(data.booked)
-    data.won <- adjustHeader(data.won)
-    data.lost <- adjustHeader(data.lost)
+    data_status_list <- lapply(data_status_list, adjustHeader)
     
     
     # generate report
@@ -192,17 +164,23 @@ server_sfdc <- function(input, output) {
       # data Tables
       k <- ifelse(is.null(input$kvalue_sfdc),10,input$kvalue_sfdc)
       
-      slideDataframe(data.commit, m=k, title="Current Projects with Status commit")
+      if(!is.null(data_status_list[["Commit"]])){
+        slideDataframe(data_status_list$Commit, m=k, title="Current Projects with Status commit")}
       
-      slideDataframe(data.upside, m=k, title="Current Projects with Status upside")
+      if(!is.null(data_status_list[["Upside"]])){
+        slideDataframe(data_status_list$Upside, m=k, title="Current Projects with Status upside")}
       
-      slideDataframe(data.closed, m=k, title="Closed Projects")
+      if(!is.null(data_status_list[["Closed"]])){
+        slideDataframe(data_status_list$Closed, m=k, title="Closed Projects")}
       
-      slideDataframe(data.booked, m=k, title="Booked Projects")
+      if(!is.null(data_status_list[["Booked"]])){
+        slideDataframe(data_status_list$Booked, m=k, title="Booked Projects")}
       
-      slideDataframe(data.won, m=k, title="Project Wins")
+      if(!is.null(data_status_list[["Won"]])){
+        slideDataframe(data_status_list$Won, m=k, title="Project Wins")}
       
-      slideDataframe(data.lost, m=k, title="Lost Projects")
+      if(!is.null(data_status_list[["Lost"]])){
+        slideDataframe(data_status_list$Lost, m=k, title="Lost Projects")}
       
     }
     # Plots
