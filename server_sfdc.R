@@ -8,10 +8,6 @@ server_sfdc <- function(input, output) {
 
   observeEvent(input$Generate_sfdc, {
     #browser()
-    print("######################")
-    print(input$author_sfdc)
-    print(Sys.Date())
-    print("######################")
     file2<- input$file_sfdc
     data_sfdc <- read.xlsx(file2$datapath, sheetIndex=1, startRow=1, as.data.frame=TRUE, header=TRUE, keepFormulas=FALSE)
     data_sfdc <- data_sfdc[1:(nrow(data_sfdc)-5),]
@@ -140,10 +136,10 @@ server_sfdc <- function(input, output) {
     
     
     # generate report
-    
+    file_name <- get_rep_name()
     
     # this is the part that build presentation.
-    pdf(file = "www/report_sfdc.pdf", width = 16, height = 9)
+    pdf(file = file_name[2], width = 16, height = 9)
     
     # first slide title, author and date
     slideFirst(titleName =ifelse(input$title_sfdc =="Report Title","Project Summary",as.character(input$title_sfdc)),
@@ -216,7 +212,7 @@ server_sfdc <- function(input, output) {
     
     output$pdfview_sfdc <- renderUI({
       tags$iframe(style="height:610px; width:100%; scrolling=yes", 
-                  src="report_sfdc.pdf")
+                  src=file_name[1])
     })
     
     

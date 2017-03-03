@@ -14,6 +14,15 @@ designPlot <- function(plotVar){
   return(plotVar)
 }
 
+# get report name, in order to get a unique identity for each report session and for each generated report
+# function returns vector, first argument report name, second argument file path
+get_rep_name <- function(){
+  report_name <- paste("report", ceiling(as.numeric(Sys.time())), floor(runif(1, min=1000, max=9999)), sep = "_")
+  report_name <- paste(report_name, ".pdf", sep = "")
+  file_path <- paste("www/", report_name, sep = "")
+  return(c(report_name, file_path))
+}
+
 # exclusiv rv
 # get dataframe stats - summary for each datacenter
 get_stats <- function(df){

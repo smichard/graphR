@@ -10,10 +10,6 @@ server_rv <- function(input, output) {
   
   observeEvent(input$Generate_rv, {
     #browser()
-    print("######################")
-    print(input$author_rv)
-    print(Sys.Date())
-    print("######################")
     file1<- input$file_rv
     data <- read.xlsx(file1$datapath, sheetIndex=1, startRow=1, as.data.frame=TRUE, header=TRUE, keepFormulas=FALSE)
     # check for OS column
@@ -107,11 +103,11 @@ server_rv <- function(input, output) {
     plot_network_Network <- ggnet2(tmp.g, color = "steelblue", alpha = 0.75, size = 5, edge.alpha = 0.5, edge.color = "grey", label.size = 4, label.alpha = 1, label.color = "black", label = network_label)
     #plot_network_Network
     
-    
+    file_name <- get_rep_name()
     
     # generate report
     # this is the part that build presentation.
-    pdf(file = "www/report_rv.pdf", width = 16, height = 9)
+    pdf(file = file_name[2], width = 16, height = 9)
     
     # first slide title, author and date
     slideFirst(titleName =ifelse(input$title_rv =="Report Title","RV_Tools Summary",as.character(input$title_rv)),
@@ -161,7 +157,7 @@ server_rv <- function(input, output) {
     
     output$pdfview_rv <- renderUI({
       tags$iframe(style="height:610px; width:100%; scrolling=yes", 
-                  src="report_rv.pdf")
+                  src=file_name[1])
     })
   })
   
