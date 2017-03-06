@@ -45,7 +45,8 @@ ui <- dashboardPage(
                               tabPanel("Report", 
                                        uiOutput("pdfview_rv")),
                               tabPanel("Instructions", includeMarkdown("instructions_rv.md"))
-                            )
+                            ),
+                            plotOutput("progress_bar_rv")
                           )
                         )
               )
@@ -91,7 +92,8 @@ ui <- dashboardPage(
                               tabPanel("Report", 
                                        uiOutput("pdfview_sfdc")),
                               tabPanel("Instructions", includeMarkdown("instructions_sfdc.md"))
-                            )
+                            ),
+                            plotOutput("progress_bar_sfdc")
                           )
                         )
               )

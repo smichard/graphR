@@ -9,6 +9,13 @@ server_rv <- function(input, output) {
   
   
   observeEvent(input$Generate_rv, {
+    #progress
+    output$progress_bar_rv <- renderPlot({
+      withProgress(message = 'Generating Report', value = 0, {
+        
+    # progress
+    setProgress(0.1, detail = "Importing Data")
+    
     #browser()
     file1<- input$file_rv
     data <- read.xlsx(file1$datapath, sheetIndex=1, startRow=1, as.data.frame=TRUE, header=TRUE, keepFormulas=FALSE)
@@ -20,6 +27,9 @@ server_rv <- function(input, output) {
     }
     colnames(data_sub) <- c("VM", "Powerstate", "CPU", "Memory", "Provisioned_MB", "In_Use_MB", "Datacenter", "OS", "Host", "Network_1")
     data_sub <- na.omit(data_sub)
+    
+    # progress
+    setProgress(0.3, detail = "Performing Calculations")    
     
     # get stats for all entries in file
     data_comp <- get_stats(data_sub)
@@ -38,6 +48,9 @@ server_rv <- function(input, output) {
         i <- i + 1
       }
     }
+    
+    # progress
+    setProgress(0.6, detail = "Generating Diagrams")
     
     # generate plots for all entries
     plot_comp <- generate_plots(data_comp, data_sub)
@@ -102,6 +115,9 @@ server_rv <- function(input, output) {
     tmp.g <- add_vertices(tmp.g, length(net_network), attr=new_vertices)
     plot_network_Network <- ggnet2(tmp.g, color = "steelblue", alpha = 0.75, size = 5, edge.alpha = 0.5, edge.color = "grey", label.size = 4, label.alpha = 1, label.color = "black", label = network_label)
     #plot_network_Network
+
+    # progress
+    setProgress(0.8, detail = "Generating Slides")
     
     file_name <- get_rep_name()
     
@@ -155,10 +171,13 @@ server_rv <- function(input, output) {
     
     dev.off()
     
+      }) #progress
+    
     output$pdfview_rv <- renderUI({
       tags$iframe(style="height:610px; width:100%; scrolling=yes", 
                   src=file_name[1])
     })
+    }) #progress
   })
   
 }

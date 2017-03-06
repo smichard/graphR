@@ -8,6 +8,9 @@ server_sfdc <- function(input, output) {
 
   observeEvent(input$Generate_sfdc, {
     #browser()
+    
+    
+    
     file2<- input$file_sfdc
     data_sfdc <- read.xlsx(file2$datapath, sheetIndex=1, startRow=1, as.data.frame=TRUE, header=TRUE, keepFormulas=FALSE)
     data_sfdc <- data_sfdc[1:(nrow(data_sfdc)-5),]
