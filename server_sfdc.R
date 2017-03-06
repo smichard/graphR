@@ -9,7 +9,12 @@ server_sfdc <- function(input, output) {
   observeEvent(input$Generate_sfdc, {
     #browser()
     
-    
+    #progress
+    output$progress_bar_sfdc <- renderPlot({
+      withProgress(message = 'Generating Report', value = 0, {
+        
+    # progress
+    setProgress(0.1, detail = "Importing Data")
     
     file2<- input$file_sfdc
     data_sfdc <- read.xlsx(file2$datapath, sheetIndex=1, startRow=1, as.data.frame=TRUE, header=TRUE, keepFormulas=FALSE)
@@ -18,6 +23,8 @@ server_sfdc <- function(input, output) {
     data_sfdc$Products <- sub(";.*", "", data_sfdc$Products)
     data_sfdc$Forecast_Amount_USD <- round(data_sfdc$Forecast_Amount_USD, 0)
     
+    # progress
+    setProgress(0.3, detail = "Performing Calculations")
     
     # create subsets, commit, closed, booked, upside, Won, Lost
     fcs_list <- unique(data_sfdc$Forecast_Status)
@@ -30,6 +37,9 @@ server_sfdc <- function(input, output) {
       names(data_status_list)[i] <- as.character(fcs_list[i])
       i <- i + 1
     }
+    
+    # progress
+    setProgress(0.6, detail = "Generating Diagrams")
     
     # calculate Amount for each Forecast Status
     summary.forecastStatus <- data_sfdc %>% group_by(Forecast_Status) %>%  summarise(Forecast_Amount_USD = sum(Forecast_Amount_USD))
@@ -137,6 +147,8 @@ server_sfdc <- function(input, output) {
     # rename dataframe header
     data_status_list <- lapply(data_status_list, adjustHeader)
     
+    # progress
+    setProgress(0.8, detail = "Generating Slides")
     
     # generate report
     file_name <- get_rep_name()
@@ -213,11 +225,14 @@ server_sfdc <- function(input, output) {
     
     dev.off()
     
+    }) #progress
+    
     output$pdfview_sfdc <- renderUI({
       tags$iframe(style="height:610px; width:100%; scrolling=yes", 
                   src=file_name[1])
     })
     
+    }) #progress
     
   })
   
