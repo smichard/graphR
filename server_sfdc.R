@@ -10,6 +10,7 @@ server_sfdc <- function(input, output) {
     #browser()
     
     #progress
+    shinyjs::show("progress_bar_sfdc")
     output$progress_bar_sfdc <- renderPlot({
       withProgress(message = 'Generating Report', value = 0, {
         
@@ -231,7 +232,7 @@ server_sfdc <- function(input, output) {
       tags$iframe(style="height:610px; width:100%; scrolling=yes", 
                   src=file_name[1])
     })
-    hide("progress_bar_sfdc")
+    shinyjs::hide("progress_bar_sfdc")
     }) #progress
     
   })
