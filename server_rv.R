@@ -14,7 +14,7 @@ server_rv <- function(input, output) {
       withProgress(message = 'Generating Report', value = 0, {
         
     # progress
-    setProgress(0.1, detail = "Importing Data")
+    setProgress(0.1, message = "Importing Data")
     
     #browser()
     file1<- input$file_rv
@@ -29,7 +29,7 @@ server_rv <- function(input, output) {
     data_sub <- na.omit(data_sub)
     
     # progress
-    setProgress(0.3, detail = "Performing Calculations")    
+    setProgress(0.3, message = "Performing Calculations")    
     
     # get stats for all entries in file
     data_comp <- get_stats(data_sub)
@@ -50,7 +50,7 @@ server_rv <- function(input, output) {
     }
     
     # progress
-    setProgress(0.6, detail = "Generating Diagrams")
+    setProgress(0.6, message = "Generating Diagrams")
     
     # generate plots for all entries
     plot_comp <- generate_plots(data_comp, data_sub)
@@ -75,7 +75,8 @@ server_rv <- function(input, output) {
     
     # Plot Host
     tmp <- data_sub %>% group_by(Host) %>% summarise(Frequency_Host = n())
-    plot_Host <- ggplot(tmp, aes(x=Host, y=Frequency_Host)) + geom_bar(stat="identity", width=.7, fill="steelblue")  + xlab("") + ylab("Count [ - ]")
+    mode <- mean(tmp$Frequency_Host)
+    plot_Host <- ggplot(tmp, aes(x=Host, y=Frequency_Host)) + geom_bar(stat="identity", width=.7, fill="steelblue")  + xlab("") + ylab("Count [ - ]") + geom_hline(yintercept = mode, col = "darkorange", size=1.2, linetype = "dashed", show.legend = TRUE) + geom_text(aes(3,mode,label = "Average", vjust = -0.3), col = "darkorange", size = 5)
     plot_Host <- designPlot(plot_Host)
     plot_Host <- plot_Host + theme(axis.text.x = element_text(size=12, angle=270, hjust=1, vjust=0.0), axis.ticks.x=element_blank())
     #plot_Host
@@ -117,7 +118,7 @@ server_rv <- function(input, output) {
     #plot_network_Network
 
     # progress
-    setProgress(0.8, detail = "Generating Slides")
+    setProgress(0.8, message = "Generating Slides")
     
     file_name <- get_rep_name()
     
@@ -177,6 +178,7 @@ server_rv <- function(input, output) {
       tags$iframe(style="height:610px; width:100%; scrolling=yes", 
                   src=file_name[1])
     })
+    hide("progress_bar_rv")
     }) #progress
   })
   
