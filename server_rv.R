@@ -8,6 +8,7 @@ server_rv <- function(input, output) {
   
   observeEvent(input$Generate_rv, {
     #progress
+    shinyjs::hide("pdfview_rv")
     shinyjs::show("progress_bar_rv")
     output$progress_bar_rv <- renderPlot({
       withProgress(message = 'Generating Report', value = 0, {
@@ -178,6 +179,7 @@ server_rv <- function(input, output) {
                   src=file_name[1])
     })
     shinyjs::hide("progress_bar_rv")
+    shinyjs::show("pdfview_rv")
     }) #progress
   })
 }
