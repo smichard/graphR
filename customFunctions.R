@@ -34,7 +34,7 @@ get_stats <- function(df){
     group_by(Description) %>%
     summarise(VM_Count = n(), n_VMs_on = sum(VM_on), n_VMs_off = n()-sum(VM_on), Concurrent_Ratio = round(n_VMs_on*100/(VM_Count), 1),
               CPU_Count = sum(CPU), Memory_Count = round(sum(Memory)/1000, 1), Storage_Occupied = round(sum(In_Use_MB)/1000, 1),
-              Storage_Provisioned = round(sum(Provisioned_MB)/1000, 1), thin_thick_ratio = round(Storage_Occupied/Storage_Provisioned*100 ,1),
+              Storage_Provisioned = round(sum(Provisioned_MB)/1000, 1), free_space = round(100-Storage_Occupied/Storage_Provisioned*100 ,1),
               CPU_Count_per_VM = round(CPU_Count/VM_Count, 1), Memory_Count_per_VM = round(Memory_Count/VM_Count, 1),
               Storage_Occupied_per_VM = round(Storage_Occupied/VM_Count, 1), Storage_Provisioned_per_VM = round(Storage_Provisioned/VM_Count, 1))
   
@@ -43,7 +43,7 @@ get_stats <- function(df){
     group_by(Description) %>%
     summarise(VM_Count = sum(VM_Count), n_VMs_on = sum(n_VMs_on), n_VMs_off = sum(n_VMs_off), Concurrent_Ratio = round(n_VMs_on*100/VM_Count, 1),
               CPU_Count = sum(CPU_Count), Memory_Count = round(sum(Memory_Count), 1), Storage_Occupied = round(sum(Storage_Occupied), 1),
-              Storage_Provisioned = round(sum(Storage_Provisioned), 1), thin_thick_ratio = round(Storage_Occupied/Storage_Provisioned*100 ,1),
+              Storage_Provisioned = round(sum(Storage_Provisioned), 1), free_space = round(100-Storage_Occupied/Storage_Provisioned*100 ,1),
               CPU_Count_per_VM = round(sum(CPU_Count)/VM_Count, 1), Memory_Count_per_VM = round(Memory_Count/VM_Count, 1),
               Storage_Occupied_per_VM = round(Storage_Occupied/VM_Count, 1), Storage_Provisioned_per_VM = round(Storage_Provisioned/VM_Count, 1))
   
@@ -56,7 +56,7 @@ get_stats_overview <- function(df){
   overview <- df %>%
     group_by(Datacenter) %>%
     summarise(Host_Count = n_distinct(Host), VM_Count = n(), CPU_Count = sum(CPU), Memory_Count = round(sum(Memory)/1000, 1), Storage_Occupied = round(sum(In_Use_MB)/1000, 1),
-              Storage_Provisioned = round(sum(Provisioned_MB)/1000, 1), thin_thick_ratio = round(Storage_Occupied/Storage_Provisioned*100 ,1)) %>%
+              Storage_Provisioned = round(sum(Provisioned_MB)/1000, 1), free_space = round(100-Storage_Occupied/Storage_Provisioned*100 ,1)) %>%
     arrange(desc(CPU_Count))
   return(overview)
 }
@@ -94,8 +94,8 @@ generate_plots <- function(df, raw_df, praefix = "comp"){
 generate_slides <- function(df, plot_list, praefix = "comp"){
   if(praefix == "comp"){
     # table all values
-    tmp <- as.data.frame(df[, c("Description", "VM_Count", "n_VMs_on", "n_VMs_off", "Concurrent_Ratio", "CPU_Count", "Memory_Count", "Storage_Occupied", "Storage_Provisioned", "thin_thick_ratio")])
-    colnames(tmp) <- c("Description", "# VM's", "# VM's on", "# VM's off", "Concurrent Ratio [%]", "# vCPU's", "Memory [GB]", "Occupied Storage [GB]", "Provisioned Storage [GB]", "Thin / Thick Ratio [%]")
+    tmp <- as.data.frame(df[, c("Description", "VM_Count", "n_VMs_on", "n_VMs_off", "Concurrent_Ratio", "CPU_Count", "Memory_Count", "Storage_Occupied", "Storage_Provisioned", "free_space")])
+    colnames(tmp) <- c("Description", "# VM's", "# VM's on", "# VM's off", "Concurrent Ratio [%]", "# vCPU's", "Memory [GB]", "Occupied Storage [GB]", "Provisioned Storage [GB]", "Free Space [%]")
     slideTable(tmp, "Summary of collected components", pathImg = "./backgrounds/main_slide_external.PNG")
     
     # table: summary per VM
@@ -118,8 +118,8 @@ generate_slides <- function(df, plot_list, praefix = "comp"){
     slideChapter(paste("Summary for Datacenter: ", praefix, ""))
     
     # table all values
-    tmp <- as.data.frame(df[, c("Description", "VM_Count", "n_VMs_on", "n_VMs_off", "Concurrent_Ratio", "CPU_Count", "Memory_Count", "Storage_Occupied", "Storage_Provisioned", "thin_thick_ratio")])
-    colnames(tmp) <- c("Description", "# VM's", "# VM's on", "# VM's off", "Concurrent Ratio [%]", "# vCPU's", "Memory [GB]", "Occupied Storage [GB]", "Provisioned Storage [GB]", "Thin / Thick Ratio [%]")
+    tmp <- as.data.frame(df[, c("Description", "VM_Count", "n_VMs_on", "n_VMs_off", "Concurrent_Ratio", "CPU_Count", "Memory_Count", "Storage_Occupied", "Storage_Provisioned", "free_space")])
+    colnames(tmp) <- c("Description", "# VM's", "# VM's on", "# VM's off", "Concurrent Ratio [%]", "# vCPU's", "Memory [GB]", "Occupied Storage [GB]", "Provisioned Storage [GB]", "Free Space [%]")
     slideTable(tmp, paste("Summary of collected components for: ", praefix, ""), pathImg = "./backgrounds/main_slide_external.PNG")
     
     # table: summary per VM
@@ -141,8 +141,8 @@ generate_slides <- function(df, plot_list, praefix = "comp"){
 
 generate_overview_slide <- function(df){
   # table all values
-  tmp <- as.data.frame(df[, c("Datacenter", "Host_Count","VM_Count", "CPU_Count", "Memory_Count", "Storage_Occupied", "Storage_Provisioned", "thin_thick_ratio")])
-  colnames(tmp) <- c("Datacenter", "# Hosts", "# VM's", "# vCPU's", "Memory [GB]", "Occupied Storage [GB]", "Provisioned Storage [GB]", "Thin / Thick Ratio [%]")
+  tmp <- as.data.frame(df[, c("Datacenter", "Host_Count","VM_Count", "CPU_Count", "Memory_Count", "Storage_Occupied", "Storage_Provisioned", "free_space")])
+  colnames(tmp) <- c("Datacenter", "# Hosts", "# VM's", "# vCPU's", "Memory [GB]", "Occupied Storage [GB]", "Provisioned Storage [GB]", "Free Space [%]")
   slideTable(tmp, paste("Overview for ", nrow(df), " Datacenter", sep=""), pathImg = "./backgrounds/main_slide_external.PNG")
 }
 
