@@ -1,9 +1,14 @@
 # both applications
-readData <- function (file=choose.files()){
+readData_old <- function (file=choose.files()){
   data <- read.xlsx(file, sheetIndex=1, startRow=1, as.data.frame=TRUE, header=TRUE, keepFormulas=FALSE)
   return(data)
 }
 
+readData <- function (file=choose.files()){
+  data <- data.frame(read_excel(file, sheet=1, col_names=TRUE))
+  #data <- data.frame(data)
+  return(data)
+}
 
 designPlot <- function(plotVar){
   plotVar <- plotVar + theme(title = element_text(face="bold", size=24),
