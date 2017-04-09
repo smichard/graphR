@@ -18,7 +18,11 @@ server_rv <- function(input, output) {
     
     #browser()
     file1<- input$file_rv
-    data <- read.xlsx(file1$datapath, sheetIndex=1, startRow=1, as.data.frame=TRUE, header=TRUE, keepFormulas=FALSE)
+    #data <- read.xlsx(file1$datapath, sheetIndex=1, startRow=1, as.data.frame=TRUE, header=TRUE, keepFormulas=FALSE)
+    # using readxl package for xls import
+    ext <- tools::file_ext(file1$name)
+    file.rename(file1$datapath, paste(file1$datapath, ext, sep = "."))
+    data <- data.frame(read_excel(paste(file1$datapath, ext, sep="."), sheet=1, col_names=TRUE))
     # check for OS column
     if("OS.according.to.the.configuration.file" %in% colnames(data)){
       data_sub <- data[, c("VM", "Powerstate", "CPUs", "Memory", "Provisioned.MB", "In.Use.MB", "Datacenter", "OS.according.to.the.configuration.file", "Host", "Network..1")]

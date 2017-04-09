@@ -19,7 +19,11 @@ server_sfdc <- function(input, output) {
     setProgress(0.1, message = "Importing Data")
     
     file2<- input$file_sfdc
-    data_sfdc <- read.xlsx(file2$datapath, sheetIndex=1, startRow=1, as.data.frame=TRUE, header=TRUE, keepFormulas=FALSE)
+    #data_sfdc <- read.xlsx(file2$datapath, sheetIndex=1, startRow=1, as.data.frame=TRUE, header=TRUE, keepFormulas=FALSE)
+    # using readxl package for xls import
+    ext <- tools::file_ext(file2$name)
+    file.rename(file2$datapath, paste(file2$datapath, ext, sep = "."))
+    data_sfdc <- data.frame(read_excel(paste(file2$datapath, ext, sep="."), sheet=1, col_names=TRUE))
     data_sfdc <- data_sfdc[1:(nrow(data_sfdc)-5),]
     colnames(data_sfdc) <- c("Opportunity_Name", "Account_Name", "Forecast_Currency", "Forecast_Amount", "Forecast_Currency_USD", "Forecast_Amount_USD", "Forecast_Status", "Close_Date", "Account_Owner", "Primary_SE", "Solution_Win", "Solution_Win_Comments", "Service_Comments", "Manager_Comments", "PreSales_Speciality", "Speciality_Engagement", "Products", "Won", "Closed")
     data_sfdc$Products <- sub(";.*", "", data_sfdc$Products)
@@ -203,17 +207,17 @@ server_sfdc <- function(input, output) {
     
     slidePlot(frequencyAM.plot, "Number of Projects for each Account Owner", pathImg = "./backgrounds/main_slide_internal.PNG")
     
-    if( nrow(summary.frequencySE) > 1){
+    if( exists("frequencySE.plot")){
       
       slidePlot(frequencySE.plot, "Number of Projects for each Primary SE", pathImg = "./backgrounds/main_slide_internal.PNG")
       
-      if( nrow(summary.revenueSE) != 0){
+      if( exists("revenueSE.plot")){
         slidePlot(revenueSE.plot, "Revenue of booked Projects for each Primary SE", pathImg = "./backgrounds/main_slide_internal.PNG")
       }
-      if( nrow(summary.revenueSE2) != 0){
+      if( exists("revenueSE2.plot")){
         slidePlot(revenueSE2.plot, "Revenue of closed Projects for each Primary SE", pathImg = "./backgrounds/main_slide_internal.PNG")
       }
-      if( nrow(summary.revenueSE3) != 0){
+      if( exists("revenueSE3.plot")){
         slidePlot(revenueSE3.plot, "Revenue of Projects Wins for each Primary SE", pathImg = "./backgrounds/main_slide_internal.PNG")
       }
     }
