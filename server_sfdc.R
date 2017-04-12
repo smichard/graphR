@@ -25,7 +25,8 @@ server_sfdc <- function(input, output) {
     file.rename(file2$datapath, paste(file2$datapath, ext, sep = "."))
     data_sfdc <- data.frame(read_excel(paste(file2$datapath, ext, sep="."), sheet=1, col_names=TRUE))
     data_sfdc <- data_sfdc[1:(nrow(data_sfdc)-5),]
-    colnames(data_sfdc) <- c("Opportunity_Name", "Account_Name", "Forecast_Currency", "Forecast_Amount", "Forecast_Currency_USD", "Forecast_Amount_USD", "Forecast_Status", "Close_Date", "Account_Owner", "Primary_SE", "Solution_Win", "Solution_Win_Comments", "Service_Comments", "Manager_Comments", "PreSales_Speciality", "Speciality_Engagement", "Products", "Won", "Closed")
+    data_sfdc <- data_sfdc[, c("Opportunity.Name", "Account.Name", "Forecast.Amount.Currency", "Forecast.Amount", "Forecast.Amount..converted..Currency", "Forecast.Amount..converted.", "Forecast.Status", "Close.Date", "Account.Owner", "Primary.SE", "Does.Presales.have.the.Solutions.Win.", "Solutions.Win.Comments", "Services.Comments", "Presales.Manager.Comments", "Presales.Specialty", "Specialty.Engagement.Type", "Products", "Won", "Closed")]
+    colnames(data_sfdc) <- c("Opportunity_Name", "Account_Name", "Forecast_Currency", "Forecast_Amount", "Forecast_Currency_USD", "Forecast_Amount_USD", "Forecast_Status", "Close_Date", "Account_Owner", "Primary_SE", "Solution_Win", "Solution_Win_Comments", "Service_Comments", "Manager_Comments", "PreSales_Specialty", "Specialty_Engagement", "Products", "Won", "Closed")
     data_sfdc$Products <- sub(";.*", "", data_sfdc$Products)
     data_sfdc$Forecast_Amount_USD <- round(data_sfdc$Forecast_Amount_USD, 0)
     
