@@ -1,0 +1,2 @@
+*/15  *  *  *  *  root /bin/sh /cleaning_job.sh
+
