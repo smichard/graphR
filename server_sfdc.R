@@ -173,7 +173,7 @@ server_sfdc <- function(input, output) {
                     You will find a summary of the number of projects, forecast amount and forecast status
                     as well as an overview of the number of projects for each account owner.",as.character(input$comments_sfdc))
     slideText(paste(strwrap(message,80),collapse = "\n"),
-              "Introduction")
+              "Introduction", pathImg = "./backgrounds/main_slide_internal.PNG")
     
     # Tables
     

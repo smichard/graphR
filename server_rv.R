@@ -142,7 +142,7 @@ server_rv <- function(input, output) {
               Large:     VM's with 6 vCPU or more  
               Medium: VM's with less than 6 vCPU and more than 2 vCPU  
               Small:     VM's with 2 vCPU or less.",
-              "Introduction", pathImg = "./backgrounds/main_slide_external.PNG")
+              "Introduction", pathImg = "./backgrounds/main_slide.PNG")
     
     # Tables
     if(length(dc_list) > 1){
@@ -159,17 +159,17 @@ server_rv <- function(input, output) {
     
     slideChapter("Host and OS overview")
     
-    slidePlot(plot_Host, "Number of VM's for each Host", pathImg = "./backgrounds/main_slide_external.PNG")
+    slidePlot(plot_Host, "Number of VM's for each Host")
     
-    slidePlot(plot_OS, "Overview of Operating Systems", pathImg = "./backgrounds/main_slide_external.PNG")
+    slidePlot(plot_OS, "Overview of Operating Systems")
     
     slideChapter("Cluster diagrams")
     
-    slidePlot(plot_network_VM, "Cluster: VM's per Datacenter", pathImg = "./backgrounds/main_slide_external.PNG")
+    slidePlot(plot_network_VM, "Cluster: VM's per Datacenter")
     
-    slidePlot(plot_network_Host, "Cluster: VM's per Host", pathImg = "./backgrounds/main_slide_external.PNG")
+    slidePlot(plot_network_Host, "Cluster: VM's per Host")
     
-    slidePlot(plot_network_Network, "Cluster: VM's per Network", pathImg = "./backgrounds/main_slide_external.PNG")
+    slidePlot(plot_network_Network, "Cluster: VM's per Network")
     
     # final slide
     slideLast()
