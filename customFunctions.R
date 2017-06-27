@@ -101,23 +101,23 @@ generate_slides <- function(df, plot_list, praefix = "comp"){
     # table all values
     tmp <- as.data.frame(df[, c("Description", "VM_Count", "n_VMs_on", "n_VMs_off", "Concurrent_Ratio", "CPU_Count", "Memory_Count", "Storage_Occupied", "Storage_Provisioned", "free_space")])
     colnames(tmp) <- c("Description", "# VM's", "# VM's on", "# VM's off", "Concurrent Ratio [%]", "# vCPU's", "Memory [GB]", "Occupied Storage [GB]", "Provisioned Storage [GB]", "Free Space [%]")
-    slideTable(tmp, "Summary of collected components", pathImg = "./backgrounds/main_slide_external.PNG")
+    slideTable(tmp, "Summary of collected components")
     
     # table: summary per VM
     tmp <- as.data.frame(df[, c("Description","VM_Count", "Concurrent_Ratio", "CPU_Count_per_VM", "Memory_Count_per_VM", "Storage_Occupied_per_VM", "Storage_Provisioned_per_VM")])
     colnames(tmp) <- c("Description", "# VM's", "Concurrent Ratio [%]", "# vCPU's", "Memory [GB]", "Occupied Storage [GB]", "Provisioned Storage [GB]")
-    slideTable(tmp, "Average values of collected components", pathImg = "./backgrounds/main_slide_external.PNG")
+    slideTable(tmp, "Average values of collected components")
     
     # Plots
-    slidePlot(plot_list[[1]], "Number of VM's for each profile", pathImg = "./backgrounds/main_slide_external.PNG")
+    slidePlot(plot_list[[1]], "Number of VM's for each profile")
     
-    slidePlot(plot_list[[2]], "Overview of powered on / off VM's for each profile", pathImg = "./backgrounds/main_slide_external.PNG")
+    slidePlot(plot_list[[2]], "Overview of powered on / off VM's for each profile")
     
-    slidePlot(plot_list[[3]], "Distribution of vCPU for all VM's", pathImg = "./backgrounds/main_slide_external.PNG")
+    slidePlot(plot_list[[3]], "Distribution of vCPU for all VM's")
     
-    slidePlot(plot_list[[4]], "Distribution of Memory for all VM's", pathImg = "./backgrounds/main_slide_external.PNG")
+    slidePlot(plot_list[[4]], "Distribution of Memory for all VM's")
     
-    slidePlot(plot_list[[5]], "Distribution of occup. and provis. storage for all VM's", pathImg = "./backgrounds/main_slide_external.PNG")
+    slidePlot(plot_list[[5]], "Distribution of occup. and provis. storage for all VM's")
     
   }else{
     slideChapter(paste("Summary for Datacenter: ", praefix, ""))
@@ -125,22 +125,22 @@ generate_slides <- function(df, plot_list, praefix = "comp"){
     # table all values
     tmp <- as.data.frame(df[, c("Description", "VM_Count", "n_VMs_on", "n_VMs_off", "Concurrent_Ratio", "CPU_Count", "Memory_Count", "Storage_Occupied", "Storage_Provisioned", "free_space")])
     colnames(tmp) <- c("Description", "# VM's", "# VM's on", "# VM's off", "Concurrent Ratio [%]", "# vCPU's", "Memory [GB]", "Occupied Storage [GB]", "Provisioned Storage [GB]", "Free Space [%]")
-    slideTable(tmp, paste("Summary of collected components for: ", praefix, ""), pathImg = "./backgrounds/main_slide_external.PNG")
+    slideTable(tmp, paste("Summary of collected components for: ", praefix, ""))
     
     # table: summary per VM
     tmp <- as.data.frame(df[, c("Description","VM_Count", "Concurrent_Ratio", "CPU_Count_per_VM", "Memory_Count_per_VM", "Storage_Occupied_per_VM", "Storage_Provisioned_per_VM")])
     colnames(tmp) <- c("Description", "# VM's", "Concurrent Ratio [%]", "# vCPU's", "Memory [GB]", "Occupied Storage [GB]", "Provisioned Storage [GB]")
-    slideTable(tmp, paste("Average values of collected components for: ", praefix, ""), pathImg = "./backgrounds/main_slide_external.PNG")
+    slideTable(tmp, paste("Average values of collected components for: ", praefix, ""))
     
-    slidePlot(plot_list[[1]], paste("Number of VM's for each profile - ", praefix, ""), pathImg = "./backgrounds/main_slide_external.PNG")
+    slidePlot(plot_list[[1]], paste("Number of VM's for each profile - ", praefix, ""))
     
-    slidePlot(plot_list[[2]], paste("Overview of powered on / off VM's for each profile - ", praefix, ""), pathImg = "./backgrounds/main_slide_external.PNG")
+    slidePlot(plot_list[[2]], paste("Overview of powered on / off VM's for each profile - ", praefix, ""))
     
-    slidePlot(plot_list[[3]], paste("Distribution of vCPU for all VM's - ", praefix, ""), pathImg = "./backgrounds/main_slide_external.PNG")
+    slidePlot(plot_list[[3]], paste("Distribution of vCPU for all VM's - ", praefix, ""))
     
-    slidePlot(plot_list[[4]], paste("Distribution of Memory for all VM's - ", praefix, ""), pathImg = "./backgrounds/main_slide_external.PNG")
+    slidePlot(plot_list[[4]], paste("Distribution of Memory for all VM's - ", praefix, ""))
     
-    slidePlot(plot_list[[5]], paste("Distribution of occup. and provis. storage for all VM's - ", praefix, ""), pathImg = "./backgrounds/main_slide_external.PNG")
+    slidePlot(plot_list[[5]], paste("Distribution of occup. and provis. storage for all VM's - ", praefix, ""))
   }  
 }
 
@@ -148,7 +148,7 @@ generate_overview_slide <- function(df){
   # table all values
   tmp <- as.data.frame(df[, c("Datacenter", "Host_Count","VM_Count", "CPU_Count", "Memory_Count", "Storage_Occupied", "Storage_Provisioned", "free_space")])
   colnames(tmp) <- c("Datacenter", "# Hosts", "# VM's", "# vCPU's", "Memory [GB]", "Occupied Storage [GB]", "Provisioned Storage [GB]", "Free Space [%]")
-  slideTable(tmp, paste("Overview for ", nrow(df), " Datacenter", sep=""), pathImg = "./backgrounds/main_slide_external.PNG")
+  slideTable(tmp, paste("Overview for ", nrow(df), " Datacenter", sep=""))
 }
 
 # function to get new vertices, gol is to add labels to network plots
@@ -180,4 +180,33 @@ designPlot <- function(plotVar){
 formatDataframe <- function(df){
   df$Forecast_Amount_USD <- format(df$Forecast_Amount_USD, big.mark = ".", decimal.mark = ",", nsmall = 0)
   return(df)
+}
+
+slideDataframe <- function(df, m = 4, title = "title"){
+  i <- 0
+  j <- ceiling(nrow(df)/m)
+  
+  while(i < j){
+    i <- i+1
+    if(i == 1){
+      if(j == 1){
+        b <- nrow(df)
+        slideTable(df[1:b, c("Opportunity Name", "Forecast Amount", "Close Date", "Account Owner", "Primary SE", "Solution Win", "Solution Win Comments", "Service Comments")], 
+                   title, pathImg = "./backgrounds/main_slide_internal.PNG")
+      }else {
+        slideTable(df[1:m, c("Opportunity Name", "Forecast Amount", "Close Date", "Account Owner", "Primary SE", "Solution Win", "Solution Win Comments", "Service Comments")], 
+                   title, pathImg = "./backgrounds/main_slide_internal.PNG")
+      }
+    }else if((i > 1) && (i < j)){
+      a <- (i-1)*m+1
+      b <- ((i-1)*m)+m
+      slideTable(df[a:b, c("Opportunity Name", "Forecast Amount", "Close Date", "Account Owner", "Primary SE", "Solution Win", "Solution Win Comments", "Service Comments")], 
+                 title, pathImg = "./backgrounds/main_slide_internal.PNG")
+    }else if((i > 1) && (i == j)){
+      a <- (i-1)*m+1
+      b <- nrow(df)
+      slideTable(df[a:b, c("Opportunity Name", "Forecast Amount", "Close Date", "Account Owner", "Primary SE", "Solution Win", "Solution Win Comments", "Service Comments")], 
+                 title, pathImg = "./backgrounds/main_slide_internal.PNG")
+    }
+  }  
 }

@@ -369,32 +369,3 @@ slideChapter <- function(titleName ="Chapter Heading",
   
   text(x = 0, y = 0.7, titleName, col = "white", cex = 4, adj = 0)
 }
-
-slideDataframe <- function(df, m = 4, title = "title"){
-  i <- 0
-  j <- ceiling(nrow(df)/m)
-  
-  while(i < j){
-    i <- i+1
-    if(i == 1){
-      if(j == 1){
-        b <- nrow(df)
-        slideTable(df[1:b, c("Opportunity Name", "Forecast Amount", "Close Date", "Account Owner", "Primary SE", "Solution Win", "Solution Win Comments", "Service Comments")], 
-                   title, pathImg = "./backgrounds/main_slide_internal.PNG")
-      }else {
-        slideTable(df[1:m, c("Opportunity Name", "Forecast Amount", "Close Date", "Account Owner", "Primary SE", "Solution Win", "Solution Win Comments", "Service Comments")], 
-                   title, pathImg = "./backgrounds/main_slide_internal.PNG")
-      }
-    }else if((i > 1) && (i < j)){
-      a <- (i-1)*m+1
-      b <- ((i-1)*m)+m
-      slideTable(df[a:b, c("Opportunity Name", "Forecast Amount", "Close Date", "Account Owner", "Primary SE", "Solution Win", "Solution Win Comments", "Service Comments")], 
-                 title, pathImg = "./backgrounds/main_slide_internal.PNG")
-    }else if((i > 1) && (i == j)){
-      a <- (i-1)*m+1
-      b <- nrow(df)
-      slideTable(df[a:b, c("Opportunity Name", "Forecast Amount", "Close Date", "Account Owner", "Primary SE", "Solution Win", "Solution Win Comments", "Service Comments")], 
-                 title, pathImg = "./backgrounds/main_slide_internal.PNG")
-    }
-  }  
-}
