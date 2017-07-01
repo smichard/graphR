@@ -9,11 +9,13 @@ RUN yum -y update && yum -y install \
 	libpng-devel \
 	libtiff-devel \
 	libjpeg-turbo-devel \
-	R \
+#	R \
 	wget \
 	yum-utils && \
 	yum clean all
-	
+
+RUN yum -y install R
+
 RUN	R -e "install.packages('shiny', repos='http://cran.rstudio.com/')" && \
 	wget https://download3.rstudio.org/centos5.9/x86_64/shiny-server-1.5.1.834-rh5-x86_64.rpm && \
 	yum -y install --nogpgcheck shiny-server-1.5.1.834-rh5-x86_64.rpm && \
