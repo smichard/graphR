@@ -142,7 +142,7 @@ server_rv <- function(input, output) {
               Large:     VM's with 6 vCPU or more  
               Medium: VM's with less than 6 vCPU and more than 2 vCPU  
               Small:     VM's with 2 vCPU or less.",
-              "Introduction", pathImg = "./backgrounds/main_slide.PNG")
+              "Introduction")
     
     # Tables
     if(length(dc_list) > 1){

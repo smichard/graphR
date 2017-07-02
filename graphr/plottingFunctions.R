@@ -203,7 +203,7 @@ slidePlot <- function(plotName,
                       slideTitle, 
                       brandName = NULL,
                       includeImg = TRUE,
-                      pathImg = "./backgrounds/main_slide.PNG") {
+                      pathImg = "./backgrounds/main_slide.png") {
   
   # ggplot is plot in this viewport
   vport <- viewport(x = 0.5, y = 0.5,
@@ -236,7 +236,7 @@ slideTable <- function(tableName,
                        leftMargin = 0.06, rightMargin = 0.03, 
                        bottomMargin = 0.12, topMargin = 0.12,
                        includeImg = TRUE,
-                       pathImg = "./backgrounds/main_slide.PNG"
+                       pathImg = "./backgrounds/main_slide.png"
 ) {
   
   par(mar = c(0,0,0,0), bg = "white")
@@ -290,7 +290,7 @@ slideTable <- function(tableName,
 # use tabs if you want to keep text alignment.
 slideText <- function(slideText, slideTitle, brandName = NULL,
                       includeImg = TRUE,
-                      pathImg = "./backgrounds/main_slide.PNG") {
+                      pathImg = "./backgrounds/main_slide.png") {
   
   par(mar = c(0,0,0,0), bg = "white")
   plot.window( xlim = c(0,1), ylim = c(0,1))
@@ -316,7 +316,7 @@ slideFirst <- function(titleName ="Report",
                        authorName = "Author",
                        documDate = Sys.Date(),
                        includeImg = TRUE,
-                       pathImg = "./backgrounds/first_slide.PNG") {
+                       pathImg = "./backgrounds/first_slide.png") {
   
   par(mar = c(0,0,0,0), bg = "grey40")
   plot.window( xlim = c(0,1), ylim = c(0,1))
@@ -335,7 +335,7 @@ slideFirst <- function(titleName ="Report",
 
 # This function creates last slide, it will contain an image in a regular 
 # basis, if not color is black by default.
-slideLast <- function(includeImg = TRUE, pathImg = "./backgrounds/last_slide.PNG") {
+slideLast <- function(includeImg = TRUE, pathImg = "./backgrounds/last_slide.png") {
   
   par(mar = c(0,0,0,0), bg = "black")
   plot.window( xlim = c(0,1), ylim = c(0,1))
@@ -356,7 +356,7 @@ slideLast <- function(includeImg = TRUE, pathImg = "./backgrounds/last_slide.PNG
 # you want to modify them.
 slideChapter <- function(titleName ="Chapter Heading", 
                        includeImg = TRUE,
-                       pathImg = "./backgrounds/chapter_slide.PNG") {
+                       pathImg = "./backgrounds/chapter_slide.png") {
   
   par(mar = c(0,0,0,0), bg = "grey40")
   plot.window( xlim = c(0,1), ylim = c(0,1))
