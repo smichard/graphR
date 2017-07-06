@@ -1,6 +1,6 @@
-<a href="https://www.graphr.de"><img src = "graphr/www/graphr_logo.png" width = "350" align="middle"></a>
+<a href="https://www.graphr.de"><img src = "graphr/www/graphR_logo.png" width = "350" align="middle"></a>
 # graphR.
-<a href="https://www.graphr.de"><img src = "graphr/www/graphr_logo.png" width = "200" align="left"></a> 
+<a href="https://www.graphr.de"><img src = "graphr/www/graphR_logo.png" width = "200" align="left"></a> 
 xyz  
 If you are interested, find out more at the [graphR. website](https://www.graphr.de). There you can also try the [app](https://www.launch.graphr.de) online and get started right away.
 
