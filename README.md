@@ -32,7 +32,7 @@ Following a short description of the most important files:
 * `plottingFunctions.R` - a set of functions to display text, data frames and diagrams on slides
 * `libraries.R` - contains a list of all required R packages, also sources the `plottingFunctions.R` file
 
-In case you want to use custom backgrounds according to your corporate identity just replace the image files within the `/graphr/backgrounds` folder and make sure to use the `.png` file format.
+In case you want to use custom backgrounds according to your corporate identity just replace the image files within the `/graphr/backgrounds` folder and make sure to use the `.png` file format. The recommended image dimensions are 960 px times 540 px.
 
 Once all changes are done you can build your own custom **graphR.** container using the following commands: 
 ```
