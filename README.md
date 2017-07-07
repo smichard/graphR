@@ -43,7 +43,7 @@ Since the core of **graphR.** is written in R the installation of R is recommend
 Following a short description of the most important files:  
 
 * `app.R` - the main file, which is needed by the Shiny web framework to display the web app. Here the GUI of the web app is described, also sources the `libraries.R` and the `server_rv.R` files 
-* `server_rv.R` - contains all necessary functions to ingest the raw data, to perform some basic analysis, to generate diagrams and to finally compile the pdf report
+* `server_rv.R` - contains all necessary functions to ingest the raw data, to perform some basic analysis, to generate diagrams and to finally generate the pdf report
 * `plottingFunctions.R` - a set of functions to display text, data frames and diagrams on slides
 * `libraries.R` - contains a list of all required R packages, also sources the `plottingFunctions.R` file
 
