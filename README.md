@@ -2,6 +2,18 @@
 <a href="https://www.graphr.de"><img src = "graphr/www/graphR_logo.png" width = "200" align="left"></a> 
 The purpose of **graphR.** is to automatize and simplify the analysis of RVTools exports and to give a visual presentation of the information contained within one Excel export. [RVTools](http://www.robware.net/rvtools/) is a VMware utility that connects to a vCenter and gathers information with an impressive level of detail on the VMware environment (e. g. on virtual machines, on ESX hosts, on the network configuration). The data collection is fast and easy. The end result can be stored in a Microsoft Excel file. RVTools exports are a great way to collect data on VMware environments. However, analyzing RVTool exports especially of complex environments can be time-consuming, error-prone and cumbersome.  
 That's where **graphR.** steps in. If you are interested, find out more at the [graphR. website](https://www.graphr.de). There you can also try the [app](https://www.launch.graphr.de) online and get started right away.
+___
+
+## Table of Contents
+    
+* [Prerequisites](https://github.com/smichard/graphR#prerequisites)
+* [Getting Started](https://github.com/smichard/graphR#getting-started)
+* [Customize](https://github.com/smichard/graphR#customize)
+* [Built With](https://github.com/smichard/graphR#built-with)
+* [Author](https://github.com/smichard/graphR#author)
+* [License](https://github.com/smichard/graphR#license)
+* [Support](https://github.com/smichard/graphR#support)
+___
 
 ## Prerequisites
 
