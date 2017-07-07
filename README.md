@@ -38,7 +38,8 @@ To customize **graphR.** according to your needs, e. g. by adding new ways to pl
 ```
 git clone https://github.com/smichard/graphR.git
 ```
-Since the core of **graphR.** is written in R the installation of R is recommended to see the chances taking effect. If you are using R-Studio as code editor the `graphr_dashboard.Rproj` file contains all necessary files to adjust **graphR.**  
+Since the core of **graphR.** is written in R the installation of R is recommended to see the chances taking effect. If you are using R-Studio as code editor the `graphr_dashboard.Rproj` file contains all necessary files to adjust **graphR.**    
+
 Following a short description of the most important files:  
 
 * `app.R` - the main file, which is needed by the Shiny web framework to display the web app. Here the GUI of the web app is described, also sources the `libraries.R` and the `server_rv.R` files 
