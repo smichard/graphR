@@ -22,7 +22,7 @@ docker run -d -p 80:3838 smichard/graphr
 To customize **graphR.** according to your needs, e. g. by adding new ways to plot the data, altering threshold values or adding a custom design just clone this repository:
 
 ```
-git clone https://github.com/smichard/graphr.git
+git clone https://github.com/smichard/graphR.git
 ```
 Since the core of **graphR.** is written in R the installation of R is recommended to see the chances taking effect. If you are using R-Studio as code editor the `graphr_dashboard.Rproj` file contains all necessary files to adjust **graphR.**  
 Following a short description of the most important files:  
