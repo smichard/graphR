@@ -38,6 +38,9 @@ server_rv <- function(input, output) {
     # get stats for all entries in file
     data_comp <- get_stats(data_sub)
     
+    ###
+    top_VM_comp <- get_top_VM(data_sub)
+    
     # get stats for each datacenter in file
     dc_list <- unique(data_sub$Datacenter)
     
@@ -49,6 +52,18 @@ server_rv <- function(input, output) {
           filter(Datacenter == dc_list[i]) %>%
           get_stats()
         data_list[[length(data_list)+1]] <- df 
+        i <- i + 1
+      }
+    }
+    
+    ###
+    if(length(dc_list) > 1){
+      top_VM_list <- list()
+      for(i in 1:length(dc_list)){
+        df <- data_sub %>%
+          filter(Datacenter == dc_list[i]) %>%
+          get_top_VM()
+        top_VM_list[[length(top_VM_list)+1]] <- df 
         i <- i + 1
       }
     }
@@ -148,11 +163,13 @@ server_rv <- function(input, output) {
     if(length(dc_list) > 1){
       generate_overview_slide(data_overview)
     }
-    generate_slides(data_comp, plot_comp)
+    ###
+    generate_slides(data_comp, plot_comp, top_VM_comp)
     
     if(length(dc_list) > 1){
       for(i in 1:length(dc_list)){
-        generate_slides(data_list[[i]], plot_dc[[i]], dc_list[i])
+        ###
+        generate_slides(data_list[[i]], plot_dc[[i]], top_VM_list[[i]], dc_list[i])
         i <- i + 1
       }
     }
