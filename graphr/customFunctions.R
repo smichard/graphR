@@ -70,7 +70,7 @@ get_stats_overview <- function(df){
 # get top 5 VM's
 get_top_VM <- function(df){
   top_VM <- df %>%
-    arrange(desc(CPU)) %>%
+    arrange(desc(CPU), desc(Memory)) %>%
     slice(1:5) %>%
     mutate(Memory = round(Memory / 1000, 1), In_Use_MB = round(In_Use_MB/1000, 1), Provisioned_MB = round(Provisioned_MB/1000, 1))
   return(top_VM)
