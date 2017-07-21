@@ -32,6 +32,15 @@ server_rv <- function(input, output) {
     colnames(data_sub) <- c("VM", "Powerstate", "CPU", "Memory", "Provisioned_MB", "In_Use_MB", "Datacenter", "OS", "Host", "Network_1")
     data_sub <- na.omit(data_sub)
     
+    ###
+    overview_host <- data.frame(read_excel(paste(file1$datapath, ext, sep="."), sheet="tabvHost", col_names=TRUE))
+    if(exists("overview_host")){
+      host_sub <- overview_host[, c("Host", "Datacenter", "CPU.Model", "X..VMs", "X..CPU", "Cores.per.CPU", "X..Cores", "X..Memory", "X..vCPUs", "ESX.Version")]
+      
+      colnames(host_sub) <- c("Host", "Datacenter", "CPU_Model", "n_VMs", "n_CPU", "Cores_per_CPU", "n_Cores", "Memory", "n_vCPU", "ESX_Version")
+      host_sub <- na.omit(host_sub)
+    }
+    
     # progress
     setProgress(0.3, message = "Performing Calculations")    
     
@@ -179,6 +188,24 @@ server_rv <- function(input, output) {
     slidePlot(plot_Host, "Number of VM's for each Host")
     
     slidePlot(plot_OS, "Overview of Operating Systems")
+    
+    ###
+    if(exists("overview_host")){
+      host_summary <- host_sub %>%
+        summarise(Host_count = round(n_distinct(Host), 0), Memory_count = round(sum(Memory)/1000, 1), CPU_count = round(sum(n_CPU), 0), Core_count = round(sum(n_Cores),0), vCPU_count = round(sum(n_vCPU), 0), vCPU_to_Core = round(vCPU_count/Core_count, 1))  
+      colnames(host_summary) <- c("# of Hosts", "overall Memory [GB]", "# of Sockets", "# of Cores", "# of vCPUs", "vCPU to Core ratio")
+      host_summary <- as.data.frame(t(host_summary))
+      host_summary <- rownames_to_column(host_summary)
+      colnames(host_summary) <- c("Description", "Value")
+      
+      host_sub <- host_sub[, c("Host", "Datacenter", "CPU_Model", "Memory", "n_CPU", "n_vCPU")]
+      colnames(host_sub) <- c("Host", "Datacenter", "CPU Model", "Memory [GB]", "# Sockets", "# vCPUs")
+      
+      
+      slideTable(host_sub, "Host overview")
+      slideTable(host_summary, "Details")
+      
+    }
     
     slideChapter("Cluster diagrams")
     
