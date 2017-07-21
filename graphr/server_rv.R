@@ -33,12 +33,16 @@ server_rv <- function(input, output) {
     data_sub <- na.omit(data_sub)
     
     ###
+    # import host information
     overview_host <- data.frame(read_excel(paste(file1$datapath, ext, sep="."), sheet="tabvHost", col_names=TRUE))
+    # if host information exist, rename columns, adjust Memory to GB
     if(exists("overview_host")){
       host_sub <- overview_host[, c("Host", "Datacenter", "CPU.Model", "X..VMs", "X..CPU", "Cores.per.CPU", "X..Cores", "X..Memory", "X..vCPUs", "ESX.Version")]
       
       colnames(host_sub) <- c("Host", "Datacenter", "CPU_Model", "n_VMs", "n_CPU", "Cores_per_CPU", "n_Cores", "Memory", "n_vCPU", "ESX_Version")
       host_sub <- na.omit(host_sub)
+      host_sub <- host_sub %>%
+        mutate(Memory = round(Memory /1000, 1))
     }
     
     # progress
@@ -107,6 +111,19 @@ server_rv <- function(input, output) {
     plot_Host <- ggplot(tmp, aes(x=Host, y=Frequency_Host)) + geom_bar(stat="identity", width=.7, fill="steelblue")  + xlab("") + ylab("Count [ - ]") + geom_hline(yintercept = mode, col = "darkorange", size=1.2, linetype = "dashed", show.legend = TRUE) + geom_text(aes(3,mode,label = "Average", vjust = -0.3), col = "darkorange", size = 5)
     plot_Host <- designPlot(plot_Host)
     plot_Host <- plot_Host + theme(axis.text.x = element_text(size=12, angle=270, hjust=1, vjust=0.0), axis.ticks.x=element_blank())
+    
+    # if host information exist, perform descript. statistics
+    if(exists("overview_host")){
+      host_summary <- host_sub %>%
+        summarise(Host_count = round(n_distinct(Host), 0), Memory_count = round(sum(Memory), 1), CPU_count = round(sum(n_CPU), 0), Core_count = round(sum(n_Cores),0), vCPU_count = round(sum(n_vCPU), 0), vCPU_to_Core = round(vCPU_count/Core_count, 1))  
+      colnames(host_summary) <- c("# of Hosts", "overall Memory [GB]", "# of Sockets", "# of Cores", "# of vCPUs", "vCPU to Core ratio")
+      host_summary <- as.data.frame(t(host_summary))
+      host_summary <- rownames_to_column(host_summary)
+      colnames(host_summary) <- c("Description", "Value")
+      
+      host_sub <- host_sub[, c("Host", "Datacenter", "CPU_Model", "Memory", "n_CPU", "n_vCPU")]
+      colnames(host_sub) <- c("Host", "Datacenter", "CPU Model", "Memory [GB]", "# Sockets", "# vCPUs")
+    }
     #plot_Host
     
     # Network Plot: VM's per Datacenter
@@ -190,21 +207,31 @@ server_rv <- function(input, output) {
     slidePlot(plot_OS, "Overview of Operating Systems")
     
     ###
+    # if host information exist, plot dataframes
     if(exists("overview_host")){
-      host_summary <- host_sub %>%
-        summarise(Host_count = round(n_distinct(Host), 0), Memory_count = round(sum(Memory)/1000, 1), CPU_count = round(sum(n_CPU), 0), Core_count = round(sum(n_Cores),0), vCPU_count = round(sum(n_vCPU), 0), vCPU_to_Core = round(vCPU_count/Core_count, 1))  
-      colnames(host_summary) <- c("# of Hosts", "overall Memory [GB]", "# of Sockets", "# of Cores", "# of vCPUs", "vCPU to Core ratio")
-      host_summary <- as.data.frame(t(host_summary))
-      host_summary <- rownames_to_column(host_summary)
-      colnames(host_summary) <- c("Description", "Value")
+      i <- 0
+      j <- ceiling(nrow(host_sub)/6)
       
-      host_sub <- host_sub[, c("Host", "Datacenter", "CPU_Model", "Memory", "n_CPU", "n_vCPU")]
-      colnames(host_sub) <- c("Host", "Datacenter", "CPU Model", "Memory [GB]", "# Sockets", "# vCPUs")
-      
-      
-      slideTable(host_sub, "Host overview")
-      slideTable(host_summary, "Details")
-      
+      while(i < j){
+        i <- i+1
+        if(i == 1){
+          if(j == 1){
+            b <- nrow(host_sub)
+            slideTable(df[1:b,], "Host overview")
+          }else {
+            slideTable(host_sub[1:6, ], "Host overview")
+          }
+        }else if((i > 1) && (i < j)){
+          a <- (i-1)*6+1
+          b <- ((i-1)*6)+6
+          slideTable(host_sub[a:b,], "Host overview" )
+        }else if((i > 1) && (i == j)){
+          a <- (i-1)*6+1
+          b <- nrow(host_sub)
+          slideTable(host_sub[a:b,], "Host overview")
+        }
+      }
+    slideTable(host_summary, "Details")
     }
     
     slideChapter("Cluster diagrams")

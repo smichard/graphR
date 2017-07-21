@@ -10,10 +10,12 @@ if(exists("overview_host")){
   
   colnames(host_sub) <- c("Host", "Datacenter", "CPU_Model", "n_VMs", "n_CPU", "Cores_per_CPU", "n_Cores", "Memory", "n_vCPU", "ESX_Version")
   host_sub <- na.omit(host_sub)
+  host_sub <- host_sub %>%
+    mutate(Memory = round(Memory /1000, 1))
 }
 
-#host_sub <- host_sub %>%
-#    mutate(test = round(n_vCPU / n_Cores, 1))
+host_sub <- host_sub %>%
+    mutate(Memory = round(Memory /1000, 1))
 
 host_summary <- host_sub %>%
     summarise(Host_count = round(n_distinct(Host), 0), Memory_count = round(sum(Memory)/1000, 1), VM_count = round(sum(n_VMs), 0), CPU_count = round(sum(n_CPU), 0), Core_count = round(sum(n_Cores),0), vCPU_count = round(sum(n_vCPU), 0), vCPU_to_Core = round(vCPU_count/Core_count, 1))  
