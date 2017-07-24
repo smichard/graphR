@@ -4,6 +4,14 @@ overview_host <- data.frame(read_excel("export.xlsx", sheet="tabvHost", col_name
 
 overview_host <- data.frame(read_excel(choose.files(), sheet="tabvHost", col_names=TRUE))
 
+overview_host <- tryCatch({
+  data.frame(read_excel(paste(choose.files(), ext, sep="."), sheet="tabvHost", col_names=TRUE))
+}, warning = function(war) {
+  # Is executed if warning encountered
+}, error = function(err) {
+  # Is executed if error encountered
+})
+
 
 if(exists("overview_host")){
   host_sub <- overview_host[, c("Host", "Datacenter", "CPU.Model", "X..VMs", "X..CPU", "Cores.per.CPU", "X..Cores", "X..Memory", "X..vCPUs", "ESX.Version")]
