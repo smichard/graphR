@@ -66,7 +66,6 @@ get_stats_overview <- function(df){
   return(overview)
 }
 
-###
 # get top 5 VM's
 get_top_VM <- function(df){
   top_VM <- df %>%
@@ -129,7 +128,6 @@ generate_slides <- function(df, plot_list, top_VM, praefix = "comp"){
     
     slidePlot(plot_list[[5]], "Distribution of occup. and provis. storage for all VM's")
     
-    ###
     tmp <- as.data.frame(top_VM[, c("VM", "CPU", "Memory", "In_Use_MB", "Provisioned_MB", "Datacenter", "Host")])
     colnames(tmp) <- c("VM Name", "# vCPU", "Memory [GB]", "Occupied Storage [GB]", "Provisioned Storage [GB]", "Datacenter", "Host")
     slideTable(tmp, "Top 5 VM's")
@@ -157,7 +155,6 @@ generate_slides <- function(df, plot_list, top_VM, praefix = "comp"){
     
     slidePlot(plot_list[[5]], paste("Distribution of occup. and provis. storage for all VM's - ", praefix, ""))
     
-    ###
     tmp <- as.data.frame(top_VM[, c("VM", "CPU", "Memory", "In_Use_MB", "Provisioned_MB", "Datacenter", "Host")])
     colnames(tmp) <- c("VM Name", "# vCPU", "Memory [GB]", "Occupied Storage [GB]", "Provisioned Storage [GB]", "Datacenter", "Host")
     slideTable(tmp, paste("Top 5 VM's for: ", praefix, ""))

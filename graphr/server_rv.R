@@ -32,7 +32,6 @@ server_rv <- function(input, output) {
     colnames(data_sub) <- c("VM", "Powerstate", "CPU", "Memory", "Provisioned_MB", "In_Use_MB", "Datacenter", "OS", "Host", "Network_1")
     data_sub <- na.omit(data_sub)
     
-    ###
     # import host information
     #overview_host <- data.frame(read_excel(paste(file1$datapath, ext, sep="."), sheet="tabvHost", col_names=TRUE))
     overview_host <- tryCatch({
@@ -60,7 +59,6 @@ server_rv <- function(input, output) {
     # get stats for all entries in file
     data_comp <- get_stats(data_sub)
     
-    ###
     top_VM_comp <- get_top_VM(data_sub)
     
     # get stats for each datacenter in file
@@ -78,7 +76,6 @@ server_rv <- function(input, output) {
       }
     }
     
-    ###
     if(length(dc_list) > 1){
       top_VM_list <- list()
       for(i in 1:length(dc_list)){
@@ -198,12 +195,11 @@ server_rv <- function(input, output) {
     if(length(dc_list) > 1){
       generate_overview_slide(data_overview)
     }
-    ###
+
     generate_slides(data_comp, plot_comp, top_VM_comp)
     
     if(length(dc_list) > 1){
       for(i in 1:length(dc_list)){
-        ###
         generate_slides(data_list[[i]], plot_dc[[i]], top_VM_list[[i]], dc_list[i])
         i <- i + 1
       }
@@ -215,7 +211,6 @@ server_rv <- function(input, output) {
     
     slidePlot(plot_OS, "Overview of Operating Systems")
     
-    ###
     # if host information exist, plot dataframes
     if(is.null(overview_host)==FALSE){
       i <- 0
