@@ -146,27 +146,29 @@ server_rv <- function(input, output) {
     
     # Network Plot: VM's per Host
     ## get new vertices and label
-    net_host <- unique(data_sub$Host)
-    new_vertices <- get_vertices(net_host)
-    network_label <- as.vector(net_host)
+    ### begin: waiting on igraph issue to be fixed ###
+    #net_host <- unique(data_sub$Host)
+    #new_vertices <- get_vertices(net_host)
+    #network_label <- as.vector(net_host)
     ## plot graph
-    tmp <- data_sub[, c("Host", "VM")]
-    tmp.g <- graph.data.frame(d = tmp, directed = FALSE)
-    tmp.g <- add_vertices(tmp.g, length(net_host), attr=new_vertices)
-    plot_network_Host <- ggnet2(tmp.g, color = "steelblue", alpha = 0.75, size = 5, edge.alpha = 0.5, edge.color = "grey", label.size = 4, label.alpha = 1, label.color = "black", label = network_label)
+    #tmp <- data_sub[, c("Host", "VM")]
+    #tmp.g <- graph.data.frame(d = tmp, directed = FALSE)
+    #tmp.g <- add_vertices(tmp.g, length(net_host), attr=new_vertices)
+    #plot_network_Host <- ggnet2(tmp.g, color = "steelblue", alpha = 0.75, size = 5, edge.alpha = 0.5, edge.color = "grey", label.size = 4, label.alpha = 1, label.color = "black", label = network_label)
     #plot_network_Host
     
     # Network Plot: VM's per Network
     ## get new vertices and label
-    net_network <- unique(data_sub$Network_1)
-    new_vertices <- get_vertices(net_network)
-    network_label <- as.vector(net_network)
+    #net_network <- unique(data_sub$Network_1)
+    #new_vertices <- get_vertices(net_network)
+    #network_label <- as.vector(net_network)
     ## plot graph
-    tmp <- data_sub[, c("Network_1", "VM")]
-    tmp.g <- graph.data.frame(d = tmp, directed = FALSE)
-    tmp.g <- add_vertices(tmp.g, length(net_network), attr=new_vertices)
-    plot_network_Network <- ggnet2(tmp.g, color = "steelblue", alpha = 0.75, size = 5, edge.alpha = 0.5, edge.color = "grey", label.size = 4, label.alpha = 1, label.color = "black", label = network_label)
+    #tmp <- data_sub[, c("Network_1", "VM")]
+    #tmp.g <- graph.data.frame(d = tmp, directed = FALSE)
+    #tmp.g <- add_vertices(tmp.g, length(net_network), attr=new_vertices)
+    #plot_network_Network <- ggnet2(tmp.g, color = "steelblue", alpha = 0.75, size = 5, edge.alpha = 0.5, edge.color = "grey", label.size = 4, label.alpha = 1, label.color = "black", label = network_label)
     #plot_network_Network
+    ### end: waiting on igraph issue to be fixed ###
 
     # progress
     setProgress(0.8, message = "Generating Slides")
@@ -238,13 +240,16 @@ server_rv <- function(input, output) {
     slideTable(host_summary, "Details")
     }
     
-    slideChapter("Cluster diagrams")
+    ### begin: waiting on igraph issue to be fixed ###
+    #slideChapter("Cluster diagrams")
     
-    slidePlot(plot_network_VM, "Cluster: VM's per Datacenter")
+    #slidePlot(plot_network_VM, "Cluster: VM's per Datacenter")
     
-    slidePlot(plot_network_Host, "Cluster: VM's per Host")
+    #slidePlot(plot_network_Host, "Cluster: VM's per Host")
     
-    slidePlot(plot_network_Network, "Cluster: VM's per Network")
+    #slidePlot(plot_network_Network, "Cluster: VM's per Network")
+    
+    ### end: waiting on igraph issue to be fixed ###
     
     # final slide
     slideLast()
