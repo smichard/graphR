@@ -9,17 +9,17 @@ RUN yum -y update && yum -y install \
 	libpng-devel \
 	libtiff-devel \
 	libjpeg-turbo-devel \
-#	R \
 	wget \
 	yum-utils && \
 	yum clean all
 
-RUN yum -y install R-3.4.0
+RUN yum -y update && yum -y install \
+	R
 
 RUN	R -e "install.packages('shiny', repos='http://cran.rstudio.com/')" && \
-	wget https://download3.rstudio.org/centos5.9/x86_64/shiny-server-1.5.1.834-rh5-x86_64.rpm && \
-	yum -y install --nogpgcheck shiny-server-1.5.1.834-rh5-x86_64.rpm && \
-	R -e "install.packages(c('rmarkdown', 'readxl', 'tools', 'shinyjs', 'shinydashboard', 'ggplot2', 'dplyr', 'png', 'grid', 'markdown', 'forcats', 'GGally', 'reshape2', 'igraph', 'flexdashboard', 'network', 'graphics', 'grDevices', 'digest', 'sna', 'scales', 'RColorBrewer', 'statnet.common', 'broom', 'intergraph', 'maps', 'tibble'), repos='https://cran.rstudio.com/')" 
+	wget https://download3.rstudio.org/centos5.9/x86_64/shiny-server-1.5.3.838-rh5-x86_64.rpm && \
+	yum -y install --nogpgcheck shiny-server-1.5.3.838-rh5-x86_64.rpm && \
+	R -e "install.packages(c('broom', 'digest', 'dplyr', 'flexdashboard', 'forcats', 'GGally', 'ggplot2', 'maps', 'markdown', 'network', 'png', 'RColorBrewer', 'readxl', 'reshape2', 'rmarkdown', 'scales', 'shinydashboard', 'shinyjs', 'sna', 'statnet.common', 'tibble'), repos='https://cran.rstudio.com/')"
 	
 COPY ./graphr /srv/shiny-server/graphr
 COPY ./shiny-server.conf /etc/shiny-server/shiny-server.conf
