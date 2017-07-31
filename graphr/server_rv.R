@@ -134,19 +134,19 @@ server_rv <- function(input, output) {
     
     # Network Plot: VM's per Datacenter
     ## get new vertices and label
-    net_dc <- unique(data_sub$Datacenter)
-    new_vertices <- get_vertices(net_dc)
-    network_label <- as.vector(net_dc)
+    ### begin: waiting on igraph issue to be fixed ###
+    #net_dc <- unique(data_sub$Datacenter)
+    #new_vertices <- get_vertices(net_dc)
+    #network_label <- as.vector(net_dc)
     ## plot graph
-    tmp <- data_sub[, c("Datacenter", "VM")]
-    tmp.g <- graph.data.frame(d = tmp, directed = FALSE)
-    tmp.g <- add_vertices(tmp.g, length(net_dc), attr=new_vertices)
-    plot_network_VM <- ggnet2(tmp.g, color = "steelblue", alpha = 0.75, size = 5, edge.alpha = 0.5, edge.color = "grey", label.size = 4, label.alpha = 1, label.color = "black", label = network_label)
+    #tmp <- data_sub[, c("Datacenter", "VM")]
+    #tmp.g <- graph.data.frame(d = tmp, directed = FALSE)
+    #tmp.g <- add_vertices(tmp.g, length(net_dc), attr=new_vertices)
+    #plot_network_VM <- ggnet2(tmp.g, color = "steelblue", alpha = 0.75, size = 5, edge.alpha = 0.5, edge.color = "grey", label.size = 4, label.alpha = 1, label.color = "black", label = network_label)
     #plot_network_VM
     
     # Network Plot: VM's per Host
     ## get new vertices and label
-    ### begin: waiting on igraph issue to be fixed ###
     #net_host <- unique(data_sub$Host)
     #new_vertices <- get_vertices(net_host)
     #network_label <- as.vector(net_host)
