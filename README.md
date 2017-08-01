@@ -28,8 +28,8 @@ To run **graphR.** you just need an eviroment which supports Docker containers. 
 The easiest way to use **graphR.** is to pull the latest pre-build Docker container from [Dockerhub](https://hub.docker.com/r/smichard/graphr/) and to run it within your enviroment. The following commands will download **graphR.** from Dockerhub and make it available on your enviroment using it's ip-address
 
 ```
-docker pull smichard/graphr_app
-docker run -d -p 80:3838 smichard/graphr_app
+docker pull smichard/graphr
+docker run -d -p 80:3838 smichard/graphr
 ```
 
 ## Customize
