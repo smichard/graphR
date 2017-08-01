@@ -1,5 +1,5 @@
 # graphR.
-<a href="https://www.graphr.de"><img src = "graphr/www/graphR_logo.png" width = "200" align="left"></a> 
+<a href="https://www.graphr.de" target="_blank"><img src = "graphr/www/graphR_logo.png" width = "200" align="left"></a> 
 The purpose of **graphR.** is to automatize and simplify the analysis of RVTools exports and to give a visual presentation of the information contained within one Excel export. [RVTools](http://www.robware.net/rvtools/) is a VMware utility that connects to a vCenter and gathers information with an impressive level of detail on the VMware environment (e. g. on virtual machines, on ESX hosts, on the network configuration). The data collection is fast and easy. The end result can be stored in a Microsoft Excel file. RVTools exports are a great way to collect data on VMware environments. However, analyzing RVTool exports especially of complex environments can be time-consuming, error-prone and cumbersome.  
 That's where **graphR.** steps in. **GraphR.** processes RVTool exports which are saved as Microsoft Excel files. It performs some statistical analysis on the data contained within the Microsoft Excel file. The dataset is visualized through some beautiful looking diagrams. Finally all tables and charts are assembled in one downloadable PDF report. Hence **graphR.** enables you to generate a concise report with some great graphics
 in order to derive meaningful insights on the analyzed VMware enviroment.  
@@ -12,7 +12,7 @@ ___
 * [Prerequisites](https://github.com/smichard/graphR#prerequisites)
 * [Getting Started](https://github.com/smichard/graphR#getting-started)
 * [Customize](https://github.com/smichard/graphR#customize)
-* [How to use graphR.](https://github.com/smichard/graphR#use)
+* [How to use graphR.](https://github.com/smichard/graphR#how-to-use-graphr)
 * [Built With](https://github.com/smichard/graphR#built-with)
 * [Author](https://github.com/smichard/graphR#author)
 * [License](https://github.com/smichard/graphR#license)
@@ -58,7 +58,7 @@ docker run -d -p 80:3838 <project name>
 
 ## How to use graphR.
 
-The use of graphR is designed to be simple: 
+The use of graphR. is designed to be simple: 
 
 1. Collect the data with the [RVTools](http://www.robware.net/rvtools/) and save the export as `.xls` or `.xlsx` file
 2. Upload the `.xls` or `.xlsx` file to graphR. and hit `Generate Report`
@@ -66,7 +66,7 @@ The use of graphR is designed to be simple:
 
 get a glimpse through this YouTube video:
 
-<a href="https://youtu.be/dotbSX79FJg"><img src = "graphr/www/graphR_screenshot.jpg" width = "400" align="center"></a> 
+<a href="https://youtu.be/dotbSX79FJg"  target="_blank"><img src = "graphr/www/graphR_screenshot.jpg" width = "400" align="center"></a> 
 
 ## Built With
 
