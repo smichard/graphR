@@ -58,11 +58,13 @@ docker run -d -p 80:3838 <project name>
 
 ## How to use graphR.
 
-1. bladi
-2. bladi
-3. bla
+The use of graphR is designed to be simple: 
 
-checkout this video on YouTube:
+1. Collect the data with the [RVTools](http://www.robware.net/rvtools/) and save the export as `.xls` or `.xlsx` file
+2. Upload the `.xls` or `.xlsx` file to graphR. and hit `Generate Report`
+3. Enjoy your report
+
+get a glimpse through this YouTube video:
 
 <a href="https://youtu.be/dotbSX79FJg"><img src = "graphr/www/graphR_screenshot.jpg" width = "400" align="center"></a> 
 
