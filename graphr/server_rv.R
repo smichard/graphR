@@ -222,7 +222,7 @@ server_rv <- function(input, output) {
         if(i == 1){
           if(j == 1){
             b <- nrow(host_sub)
-            slideTable(df[1:b,], "Host overview")
+            slideTable(host_sub[1:b,], "Host overview")
           }else {
             slideTable(host_sub[1:6, ], "Host overview")
           }
