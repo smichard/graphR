@@ -17,7 +17,7 @@ server_rv <- function(input, output) {
     setProgress(0.1, message = "Importing Data")
     
     #browser()
-    file1<- input$file_rv
+    file1 <- input$file_rv
     ext <- tools::file_ext(file1$name)
     file.rename(file1$datapath, paste(file1$datapath, ext, sep = "."))
     # check which file ending used
