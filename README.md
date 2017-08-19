@@ -60,8 +60,8 @@ docker run -d -p 80:3838 <project name>
 
 The use of graphR. is designed to be simple: 
 
-1. Collect the data with the [RVTools](http://www.robware.net/rvtools/) and save the export as `.xls` or `.xlsx` file
-2. Upload the `.xls` or `.xlsx` file to graphR. and hit `Generate Report`
+1. Collect the data with the [RVTools](http://www.robware.net/rvtools/) and save the export as `.xls`, `.xlsx` or as `.csv` file
+2. Upload the `.xls` / `.xlsx` file (recommended) or the `tabvInfo.csv` to graphR. and hit `Generate Report`
 3. Enjoy your report
 
 get a glimpse through this YouTube video:

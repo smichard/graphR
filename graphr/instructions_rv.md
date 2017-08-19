@@ -4,7 +4,7 @@
 The purpose of **graphR** is to automatize and simplify the analysis of RVTools exports and to give a visual presentation of the information contained within an Excel file or a comma seperated file.
 
 ### Instructions
-The use of **graphR** is designed to be simple and should be self-explanatory. Just upload the Excel file (recommended) or the comma seperated file after inserting a title and author name and hit *Generate Report*. If using the `.csv` file the `tabvInfo.csv`should be uploaded.    
+The use of **graphR** is designed to be simple and should be self-explanatory. Just upload the Excel file (recommended) or the comma seperated file after inserting a title and author name and hit *Generate Report*. If using the `.csv` file the `tabvInfo.csv` should be uploaded.    
 The RVTools export should at least contain the following columns:  
 VM, Powerstate, CPUs, Memory, Network #1, Provisioned MB, In Use MB, Datacenter, Host, OS according to the configuration file 
 
