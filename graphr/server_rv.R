@@ -18,29 +18,41 @@ server_rv <- function(input, output) {
     
     #browser()
     file1<- input$file_rv
-    #data <- read.xlsx(file1$datapath, sheetIndex=1, startRow=1, as.data.frame=TRUE, header=TRUE, keepFormulas=FALSE)
-    # using readxl package for xls import
     ext <- tools::file_ext(file1$name)
     file.rename(file1$datapath, paste(file1$datapath, ext, sep = "."))
-    data <- data.frame(read_excel(paste(file1$datapath, ext, sep="."), sheet=1, col_names=TRUE))
-    # check for OS column
-    if("OS.according.to.the.configuration.file" %in% colnames(data)){
-      data_sub <- data[, c("VM", "Powerstate", "CPUs", "Memory", "Provisioned.MB", "In.Use.MB", "Datacenter", "OS.according.to.the.configuration.file", "Host", "Network..1")]
-    } else{
-      data_sub <- data[, c("VM", "Powerstate", "CPUs", "Memory", "Provisioned.MB", "In.Use.MB", "Datacenter", "OS", "Host", "Network..1")]
-    }
-    colnames(data_sub) <- c("VM", "Powerstate", "CPU", "Memory", "Provisioned_MB", "In_Use_MB", "Datacenter", "OS", "Host", "Network_1")
-    data_sub <- na.omit(data_sub)
-    
-    # import host information
-    #overview_host <- data.frame(read_excel(paste(file1$datapath, ext, sep="."), sheet="tabvHost", col_names=TRUE))
-    overview_host <- tryCatch({
-      data.frame(read_excel(paste(file1$datapath, ext, sep="."), sheet="tabvHost", col_names=TRUE))
+    # check which file ending used
+    if(ext == "csv"){
+        data <- read.csv(paste(file1$datapath, ext, sep="."), header = TRUE, sep = ",", dec = ".", fill = FALSE, comment.char = "")
+        # check for OS column
+        if("OS.according.to.the.configuration.file" %in% colnames(data)){
+          data_sub <- data[, c("VM", "Powerstate", "CPUs", "Memory", "Provisioned.MB", "In.Use.MB", "Datacenter", "OS.according.to.the.configuration.file", "Host", "Network..1")]
+        } else{
+          data_sub <- data[, c("VM", "Powerstate", "CPUs", "Memory", "Provisioned.MB", "In.Use.MB", "Datacenter", "OS", "Host", "Network..1")]
+        }
+        colnames(data_sub) <- c("VM", "Powerstate", "CPU", "Memory", "Provisioned_MB", "In_Use_MB", "Datacenter", "OS", "Host", "Network_1")
+        data_sub <- na.omit(data_sub)
+        overview_host <- NULL
+    }else{
+        # using readxl package for xls import
+        data <- data.frame(read_excel(paste(file1$datapath, ext, sep="."), sheet=1, col_names=TRUE))
+        # check for OS column
+        if("OS.according.to.the.configuration.file" %in% colnames(data)){
+          data_sub <- data[, c("VM", "Powerstate", "CPUs", "Memory", "Provisioned.MB", "In.Use.MB", "Datacenter", "OS.according.to.the.configuration.file", "Host", "Network..1")]
+        } else{
+          data_sub <- data[, c("VM", "Powerstate", "CPUs", "Memory", "Provisioned.MB", "In.Use.MB", "Datacenter", "OS", "Host", "Network..1")]
+        }
+        colnames(data_sub) <- c("VM", "Powerstate", "CPU", "Memory", "Provisioned_MB", "In_Use_MB", "Datacenter", "OS", "Host", "Network_1")
+        data_sub <- na.omit(data_sub)
+        
+        # import host information
+        overview_host <- tryCatch({
+          data.frame(read_excel(paste(file1$datapath, ext, sep="."), sheet="tabvHost", col_names=TRUE))
         }, warning = function(war) {
           # Is executed if warning encountered
         }, error = function(err) {
           # Is executed if error encountered
-      })
+        })  
+    }
     
     # if host information exist, rename columns, adjust Memory to GB
     if(is.null(overview_host)==FALSE){
