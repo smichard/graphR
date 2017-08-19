@@ -27,7 +27,7 @@ ui <- dashboardPage(
                             
                             textInput("author_rv", "Author", "Author of the Report"),
                             
-                            fileInput("file_rv", "File input", accept=c('.xlsx', '.xls')),
+                            fileInput("file_rv", "File input", accept=c('.xlsx', '.xls', '.csv')),
                             
                             actionButton("Generate_rv","Generate Report")
                           ),

@@ -18,29 +18,41 @@ server_rv <- function(input, output) {
     
     #browser()
     file1<- input$file_rv
-    #data <- read.xlsx(file1$datapath, sheetIndex=1, startRow=1, as.data.frame=TRUE, header=TRUE, keepFormulas=FALSE)
-    # using readxl package for xls import
     ext <- tools::file_ext(file1$name)
     file.rename(file1$datapath, paste(file1$datapath, ext, sep = "."))
-    data <- data.frame(read_excel(paste(file1$datapath, ext, sep="."), sheet=1, col_names=TRUE))
-    # check for OS column
-    if("OS.according.to.the.configuration.file" %in% colnames(data)){
-      data_sub <- data[, c("VM", "Powerstate", "CPUs", "Memory", "Provisioned.MB", "In.Use.MB", "Datacenter", "OS.according.to.the.configuration.file", "Host", "Network..1")]
-    } else{
-      data_sub <- data[, c("VM", "Powerstate", "CPUs", "Memory", "Provisioned.MB", "In.Use.MB", "Datacenter", "OS", "Host", "Network..1")]
-    }
-    colnames(data_sub) <- c("VM", "Powerstate", "CPU", "Memory", "Provisioned_MB", "In_Use_MB", "Datacenter", "OS", "Host", "Network_1")
-    data_sub <- na.omit(data_sub)
-    
-    # import host information
-    #overview_host <- data.frame(read_excel(paste(file1$datapath, ext, sep="."), sheet="tabvHost", col_names=TRUE))
-    overview_host <- tryCatch({
-      data.frame(read_excel(paste(file1$datapath, ext, sep="."), sheet="tabvHost", col_names=TRUE))
+    # check which file ending used
+    if(ext == "csv"){
+        data <- read.csv(paste(file1$datapath, ext, sep="."), header = TRUE, sep = ",", dec = ".", fill = FALSE, comment.char = "")
+        # check for OS column
+        if("OS.according.to.the.configuration.file" %in% colnames(data)){
+          data_sub <- data[, c("VM", "Powerstate", "CPUs", "Memory", "Provisioned.MB", "In.Use.MB", "Datacenter", "OS.according.to.the.configuration.file", "Host", "Network..1")]
+        } else{
+          data_sub <- data[, c("VM", "Powerstate", "CPUs", "Memory", "Provisioned.MB", "In.Use.MB", "Datacenter", "OS", "Host", "Network..1")]
+        }
+        colnames(data_sub) <- c("VM", "Powerstate", "CPU", "Memory", "Provisioned_MB", "In_Use_MB", "Datacenter", "OS", "Host", "Network_1")
+        data_sub <- na.omit(data_sub)
+        overview_host <- NULL
+    }else{
+        # using readxl package for xls import
+        data <- data.frame(read_excel(paste(file1$datapath, ext, sep="."), sheet=1, col_names=TRUE))
+        # check for OS column
+        if("OS.according.to.the.configuration.file" %in% colnames(data)){
+          data_sub <- data[, c("VM", "Powerstate", "CPUs", "Memory", "Provisioned.MB", "In.Use.MB", "Datacenter", "OS.according.to.the.configuration.file", "Host", "Network..1")]
+        } else{
+          data_sub <- data[, c("VM", "Powerstate", "CPUs", "Memory", "Provisioned.MB", "In.Use.MB", "Datacenter", "OS", "Host", "Network..1")]
+        }
+        colnames(data_sub) <- c("VM", "Powerstate", "CPU", "Memory", "Provisioned_MB", "In_Use_MB", "Datacenter", "OS", "Host", "Network_1")
+        data_sub <- na.omit(data_sub)
+        
+        # import host information
+        overview_host <- tryCatch({
+          data.frame(read_excel(paste(file1$datapath, ext, sep="."), sheet="tabvHost", col_names=TRUE))
         }, warning = function(war) {
           # Is executed if warning encountered
         }, error = function(err) {
           # Is executed if error encountered
-      })
+        })  
+    }
     
     # if host information exist, rename columns, adjust Memory to GB
     if(is.null(overview_host)==FALSE){
@@ -134,39 +146,38 @@ server_rv <- function(input, output) {
     
     # Network Plot: VM's per Datacenter
     ## get new vertices and label
-    ### begin: waiting on igraph issue to be fixed ###
-    #net_dc <- unique(data_sub$Datacenter)
-    #new_vertices <- get_vertices(net_dc)
-    #network_label <- as.vector(net_dc)
+    net_dc <- unique(data_sub$Datacenter)
+    new_vertices <- get_vertices(net_dc)
+    network_label <- as.vector(net_dc)
     ## plot graph
-    #tmp <- data_sub[, c("Datacenter", "VM")]
-    #tmp.g <- graph.data.frame(d = tmp, directed = FALSE)
-    #tmp.g <- add_vertices(tmp.g, length(net_dc), attr=new_vertices)
-    #plot_network_VM <- ggnet2(tmp.g, color = "steelblue", alpha = 0.75, size = 5, edge.alpha = 0.5, edge.color = "grey", label.size = 4, label.alpha = 1, label.color = "black", label = network_label)
+    tmp <- data_sub[, c("Datacenter", "VM")]
+    tmp.g <- graph.data.frame(d = tmp, directed = FALSE)
+    tmp.g <- add_vertices(tmp.g, length(net_dc), attr=new_vertices)
+    plot_network_VM <- ggnet2(tmp.g, color = "steelblue", alpha = 0.75, size = 5, edge.alpha = 0.5, edge.color = "grey", label.size = 4, label.alpha = 1, label.color = "black", label = network_label)
     #plot_network_VM
     
     # Network Plot: VM's per Host
     ## get new vertices and label
-    #net_host <- unique(data_sub$Host)
-    #new_vertices <- get_vertices(net_host)
-    #network_label <- as.vector(net_host)
+    net_host <- unique(data_sub$Host)
+    new_vertices <- get_vertices(net_host)
+    network_label <- as.vector(net_host)
     ## plot graph
-    #tmp <- data_sub[, c("Host", "VM")]
-    #tmp.g <- graph.data.frame(d = tmp, directed = FALSE)
-    #tmp.g <- add_vertices(tmp.g, length(net_host), attr=new_vertices)
-    #plot_network_Host <- ggnet2(tmp.g, color = "steelblue", alpha = 0.75, size = 5, edge.alpha = 0.5, edge.color = "grey", label.size = 4, label.alpha = 1, label.color = "black", label = network_label)
+    tmp <- data_sub[, c("Host", "VM")]
+    tmp.g <- graph.data.frame(d = tmp, directed = FALSE)
+    tmp.g <- add_vertices(tmp.g, length(net_host), attr=new_vertices)
+    plot_network_Host <- ggnet2(tmp.g, color = "steelblue", alpha = 0.75, size = 5, edge.alpha = 0.5, edge.color = "grey", label.size = 4, label.alpha = 1, label.color = "black", label = network_label)
     #plot_network_Host
     
     # Network Plot: VM's per Network
     ## get new vertices and label
-    #net_network <- unique(data_sub$Network_1)
-    #new_vertices <- get_vertices(net_network)
-    #network_label <- as.vector(net_network)
+    net_network <- unique(data_sub$Network_1)
+    new_vertices <- get_vertices(net_network)
+    network_label <- as.vector(net_network)
     ## plot graph
-    #tmp <- data_sub[, c("Network_1", "VM")]
-    #tmp.g <- graph.data.frame(d = tmp, directed = FALSE)
-    #tmp.g <- add_vertices(tmp.g, length(net_network), attr=new_vertices)
-    #plot_network_Network <- ggnet2(tmp.g, color = "steelblue", alpha = 0.75, size = 5, edge.alpha = 0.5, edge.color = "grey", label.size = 4, label.alpha = 1, label.color = "black", label = network_label)
+    tmp <- data_sub[, c("Network_1", "VM")]
+    tmp.g <- graph.data.frame(d = tmp, directed = FALSE)
+    tmp.g <- add_vertices(tmp.g, length(net_network), attr=new_vertices)
+    plot_network_Network <- ggnet2(tmp.g, color = "steelblue", alpha = 0.75, size = 5, edge.alpha = 0.5, edge.color = "grey", label.size = 4, label.alpha = 1, label.color = "black", label = network_label)
     #plot_network_Network
     ### end: waiting on igraph issue to be fixed ###
 
@@ -241,13 +252,13 @@ server_rv <- function(input, output) {
     }
     
     ### begin: waiting on igraph issue to be fixed ###
-    #slideChapter("Cluster diagrams")
+    slideChapter("Cluster diagrams")
     
-    #slidePlot(plot_network_VM, "Cluster: VM's per Datacenter")
+    slidePlot(plot_network_VM, "Cluster: VM's per Datacenter")
     
-    #slidePlot(plot_network_Host, "Cluster: VM's per Host")
+    slidePlot(plot_network_Host, "Cluster: VM's per Host")
     
-    #slidePlot(plot_network_Network, "Cluster: VM's per Network")
+    slidePlot(plot_network_Network, "Cluster: VM's per Network")
     
     ### end: waiting on igraph issue to be fixed ###
     
