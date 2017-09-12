@@ -1,3 +1,5 @@
+options(shiny.maxRequestSize=50*1024^2) 
+
 server_rv <- function(input, output) {
   observe({
     shinyjs::disable(id = "Generate_rv")
