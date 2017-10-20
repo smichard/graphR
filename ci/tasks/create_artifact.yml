@@ -5,7 +5,7 @@ image_resource:
   source:
     repository: ubuntu
 inputs:
-- name: website_sources
+- name: app_sources
 - name: version
 outputs:
 - name: artifact
@@ -18,5 +18,5 @@ run:
     export CURRENT_TIMESTAMP=$(date +"%Y%m%d%H%S")
     export CURRENT_VERSION=$(cat version/version)
     # Creating sample package file with a file name containing the new version number
-    tar -zcvf personal_website-$CURRENT_TIMESTAMP-$CURRENT_VERSION.tar.gz website_sources
-    cp personal_website-$CURRENT_TIMESTAMP-$CURRENT_VERSION.tar.gz artifact
+    tar -zcvf graphr_app-$CURRENT_TIMESTAMP-$CURRENT_VERSION.tar.gz app_sources
+    cp graphr_app-$CURRENT_TIMESTAMP-$CURRENT_VERSION.tar.gz artifact

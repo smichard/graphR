@@ -157,7 +157,7 @@ jobs:
     serial: true
     plan:
     - get: version
-    - get: website_sources
+    - get: app_sources
       passed: [ build-graphr-app ]
       trigger: true
     - task: create-artifact
