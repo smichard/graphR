@@ -5,6 +5,11 @@ resource_types:
       repository: cfcommunity/slack-notification-resource
       tag: latest
 
+  - name: twitter_notification
+    type: docker-image
+    source:
+      repository: ecsteam/twitter-concourse-resource
+
 resources:
 - name: app_sources_dev
   type: git
@@ -64,6 +69,14 @@ resources:
   type: slack_notification
   source:
     url: {{slack_hook}}
+
+- name: twitter_msg
+  type: twitter_notification
+  source:
+    consumer_key: {{twitter_consumer_key}}
+    consumer_secret: {{twitter_consumer_secret}}
+    access_token: {{twitter_access_token}}
+    access_token_secret: {{twitter_access_token_secret}}
 
 jobs:
   - name: build-graphr-app-dev
@@ -191,3 +204,7 @@ jobs:
       - put: version
         params:
           bump: minor
+      - put: twitter_msg
+        params:
+          status: >
+            Just deployed a new version of the graphR. app with @concourseci (build ${BUILD_ID}) - check it out https://wwww.graphr.de #CI #RVtools
