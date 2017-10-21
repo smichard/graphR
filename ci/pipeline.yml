@@ -191,21 +191,3 @@ jobs:
       - put: version
         params:
           bump: minor
-
-  - name: minor
-    public: true
-    plan:
-    - aggregate:
-      - get: version
-      - put: version
-        params:
-          bump: minor
-
-  - name: major
-    public: true
-    plan:
-    - aggregate:
-      - get: version
-      - put: version
-        params:
-          bump: major
