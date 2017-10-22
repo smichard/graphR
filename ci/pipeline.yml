@@ -88,6 +88,9 @@ jobs:
     - put: docker_hub_dev
       params:
         build: app_sources_dev/
+        #load_base: library/centos
+        cache: true
+        cache_tag: latest
       on_failure:
         do:
         - task: hue_red
@@ -144,6 +147,8 @@ jobs:
     - put: docker_hub
       params:
         build: app_sources/
+        cache: true
+        cache_tag: latest
       on_failure:
         do:
         - task: hue_red
