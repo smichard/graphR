@@ -88,7 +88,6 @@ jobs:
     - put: docker_hub_dev
       params:
         build: app_sources_dev/
-        #load_base: library/centos
         cache: true
         cache_tag: latest
       on_failure:
