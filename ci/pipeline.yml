@@ -195,7 +195,7 @@ jobs:
         params:
           channel: '#general'
           text: |
-            graphR app: Artifact succesfully uploaded to S3 target.
+            graphR app: Artifact succesfully uploaded to S3 target (ECS Testdrive).
 
   - name: bump-version-minor
     public: true
