@@ -16,7 +16,6 @@ source("libraries.R")
   colnames(data_sub) <- c("VM", "Powerstate", "CPU", "Memory", "Provisioned_MB", "In_Use_MB", "Datacenter", "OS", "Host", "Network_1")
   data_sub <- na.omit(data_sub)
   
-  
 
 
 "VM" %in% colnames(data)
@@ -30,3 +29,11 @@ source("libraries.R")
 "Host" %in% colnames(data)
 "Network..1" %in% colnames(data)
 
+
+# test if rows have been ommitted
+if(nrow(data_sub) <  nrow(data)){
+  # everthing as usual
+}else{
+  # show warning
+  print(2)
+}
