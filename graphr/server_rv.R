@@ -48,7 +48,7 @@ server_rv <- function(input, output) {
         
         # import host information
         overview_host <- tryCatch({
-          data.frame(read_excel(paste(file1$datapath, ext, sep="."), sheet="tabvHost", col_names=TRUE))
+          data.frame(read_excel(paste(file1$datapath, ext, sep="."), sheet="vHost", col_names=TRUE))
         }, warning = function(war) {
           # Is executed if warning encountered
         }, error = function(err) {
