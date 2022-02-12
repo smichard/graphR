@@ -20,6 +20,6 @@ steps:
   - 'push'
   - 'eu.gcr.io/storied-network-317810/graphr-app'
 
-timeout: 7200s
+timeout: 7240s
 
 # [END cloudbuild]
