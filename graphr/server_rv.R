@@ -27,9 +27,13 @@ server_rv <- function(input, output) {
         data <- read.csv(paste(file1$datapath, ext, sep="."), header = TRUE, sep = ",", dec = ".", fill = FALSE, comment.char = "")
         # check for OS column
         if("OS.according.to.the.configuration.file" %in% colnames(data)){
-          data_sub <- data[, c("VM", "Powerstate", "CPUs", "Memory", "Provisioned.MB", "In.Use.MB", "Datacenter", "OS.according.to.the.configuration.file", "Host", "Network..1")]
+          if("In.Use.MiB" %in% colnames(data)){
+            data_sub <- data[, c("VM", "Powerstate", "CPUs", "Memory", "Provisioned.MiB", "In.Use.MiB", "Datacenter", "OS.according.to.the.configuration.file", "Host", "Network..1")]
+          } else {
+            data_sub <- data[, c("VM", "Powerstate", "CPUs", "Memory", "Provisioned.MB", "In.Use.MB", "Datacenter", "OS.according.to.the.configuration.file", "Host", "Network..1")] 
+          }
         } else{
-          data_sub <- data[, c("VM", "Powerstate", "CPUs", "Memory", "Provisioned.MB", "In.Use.MB", "Datacenter", "OS", "Host", "Network..1")]
+          data_sub <- data[, c("VM", "Powerstate", "CPUs", "Memory", "Provisioned.MiB", "In.Use.MiB", "Datacenter", "OS", "Host", "Network..1")]
         }
         colnames(data_sub) <- c("VM", "Powerstate", "CPU", "Memory", "Provisioned_MB", "In_Use_MB", "Datacenter", "OS", "Host", "Network_1")
         data_sub <- na.omit(data_sub)
@@ -39,9 +43,13 @@ server_rv <- function(input, output) {
         data <- data.frame(read_excel(paste(file1$datapath, ext, sep="."), sheet=1, col_names=TRUE))
         # check for OS column
         if("OS.according.to.the.configuration.file" %in% colnames(data)){
-          data_sub <- data[, c("VM", "Powerstate", "CPUs", "Memory", "Provisioned.MB", "In.Use.MB", "Datacenter", "OS.according.to.the.configuration.file", "Host", "Network..1")]
+          if("In.Use.MiB" %in% colnames(data)){
+            data_sub <- data[, c("VM", "Powerstate", "CPUs", "Memory", "Provisioned.MiB", "In.Use.MiB", "Datacenter", "OS.according.to.the.configuration.file", "Host", "Network..1")]
+          } else {
+            data_sub <- data[, c("VM", "Powerstate", "CPUs", "Memory", "Provisioned.MB", "In.Use.MB", "Datacenter", "OS.according.to.the.configuration.file", "Host", "Network..1")] 
+          }
         } else{
-          data_sub <- data[, c("VM", "Powerstate", "CPUs", "Memory", "Provisioned.MB", "In.Use.MB", "Datacenter", "OS", "Host", "Network..1")]
+          data_sub <- data[, c("VM", "Powerstate", "CPUs", "Memory", "Provisioned.MiB", "In.Use.MiB", "Datacenter", "OS", "Host", "Network..1")]
         }
         colnames(data_sub) <- c("VM", "Powerstate", "CPU", "Memory", "Provisioned_MB", "In_Use_MB", "Datacenter", "OS", "Host", "Network_1")
         data_sub <- na.omit(data_sub)

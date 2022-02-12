@@ -17,5 +17,4 @@ Please use the [GitHub repository](https://github.com/smichard/graphr) to provid
 
 
 ### Support
-
-https://www.buymeacoffee.com/graphr
+If you find the project helpful and it adds value to your work, it would be nice if you would support the project as a sponsor, to ensure the long-term existence of the project - [Buy Me a Coffee](https://www.buymeacoffee.com/graphr).

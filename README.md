@@ -4,7 +4,11 @@ The purpose of **graphR.** is to automatize and simplify the analysis of RVTools
 That's where **graphR.** steps in. **GraphR.** processes RVTool exports which are saved as Microsoft Excel or as comma seperated files. It performs some statistical analysis on the data contained within the Microsoft Excel file. The dataset is visualized through some beautiful looking diagrams. Finally all tables and charts are assembled in one downloadable PDF report. Hence **graphR.** enables you to generate a concise report with some great graphics
 in order to derive meaningful insights on the analyzed VMware environment.  
 
- If you are interested, find out more at the [graphR. website](https://www.graphr.de). There you can also try the [app](https://www.launch.graphr.de) online and get started right away.
+ If you are interested, find out more at the [graphR. website](https://www.graphr.de). There you can also try the [app](https://www.launch.graphr.de) online and get started right away.  
+
+To provide feedback or to point out bugs please reach out via mail: [graphr.feedback@gmail.com](mailto:graphr.feedback@gmail.com).  
+
+If you find the project helpful please consider supporting graphR. as a sponsor - [Buy Me a Coffee](https://www.buymeacoffee.com/graphr).
 ___
 
 ## Table of Contents
@@ -76,9 +80,9 @@ get a glimpse through this YouTube video:
 
 ## Author
 
-* **Stephan Michard** - reach out on [Twitter](https://twitter.com/StephanMichard)
+* **Stephan Michard** - reach out on [Twitter](https://twitter.com/StephanMichard) or via [mail](mailto:graphr.feedback@gmail.com).
 
 ## Support
 
-Please file bugs and issues at the GitHub issues page. The code and documentation are released with no warranties or SLAs and are intended to be supported through a community driven process.
+Please file bugs and issues at the GitHub issues page. The code and documentation are released with no warranties or SLAs and are intended to be supported through a community driven process. If you find the project helpful and it adds value to your work, it would be nice if you would support the project as a sponsor, to ensure the long-term existence of the project - [Buy Me a Coffee](https://www.buymeacoffee.com/graphr).
 

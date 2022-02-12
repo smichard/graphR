@@ -29,7 +29,9 @@ ui <- dashboardPage(
                             
                             fileInput("file_rv", "File input", accept=c('.xlsx', '.xls', '.csv')),
                             
-                            actionButton("Generate_rv","Generate Report")
+                            actionButton("Generate_rv","Generate Report"),
+                            
+                            uiOutput("tab")
                           ),
                           
                           # Show a summary of the dataset and an HTML table with the
@@ -55,6 +57,11 @@ ui <- dashboardPage(
 )
 server <- function(input, output) {
   server_rv(input, output)
+  
+  url <- a("Consider supporting", href="https://www.buymeacoffee.com/graphr")
+  output$tab <- renderUI({
+    tagList(url)
+  })
 }
 
 shinyApp(ui, server)
