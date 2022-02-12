@@ -1,0 +1,25 @@
+# [START cloudbuild]
+steps:
+# This step builds the container image.
+- name: 'gcr.io/cloud-builders/docker'
+  id: Build
+  args:
+  - 'build'
+  - '-t'
+  - 'eu.gcr.io/storied-network-317810/graphr-app:$BUILD_ID'
+  - '-t'
+  - 'eu.gcr.io/storied-network-317810/graphr-app:latest'
+  - '.'
+
+# This step pushes the image to Container Registry
+# The PROJECT_ID and SHORT_SHA variables are automatically
+# replaced by Cloud Build.
+- name: 'gcr.io/cloud-builders/docker'
+  id: Push
+  args:
+  - 'push'
+  - 'eu.gcr.io/storied-network-317810/graphr-app'
+
+timeout: 7200s
+
+# [END cloudbuild]
