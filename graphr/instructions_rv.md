@@ -13,5 +13,9 @@ VM, Powerstate, CPUs, Memory, Network #1, Provisioned MB, In Use MB, Datacenter,
 The Excel file should not be altered in any kind, e. g. by inserting comments, changing column names or inserting new rows manually.  
 
 ### Feedback
-Please use the [GitHub repository](https://github.com/smichard/graphr) to provide feedback, new ideas or bugs or reach out to the author on [Twitter](https://twitter.com/StephanMichard).
+Please use the [GitHub repository](https://github.com/smichard/graphr) to provide feedback, new ideas or bugs or reach out to the author on [Twitter](https://twitter.com/StephanMichard) or via mail: graphr.feedback@gmail.com
 
+
+### Support
+
+https://www.buymeacoffee.com/graphr
