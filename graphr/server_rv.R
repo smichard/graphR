@@ -127,7 +127,7 @@ server_rv <- function(input, output) {
         # Plot Host
         tmp <- data_sub %>% group_by(Host) %>% summarise(Frequency_Host = n())
         mode <- mean(tmp$Frequency_Host)
-        plot_Host <- ggplot(tmp, aes(x=Host, y=Frequency_Host)) + geom_bar(stat="identity", width=.7, fill="steelblue")  + xlab("") + ylab("Count [ - ]") + geom_hline(yintercept = mode, col = "darkorange", size=1.2, linetype = "dashed", show.legend = TRUE) + geom_text(aes(3,mode,label = "Average", vjust = -0.3), col = "darkorange", size = 5)
+        plot_Host <- ggplot(tmp, aes(x=Host, y=Frequency_Host)) + geom_bar(stat="identity", width=.7, fill="steelblue")  + xlab("") + ylab("Count [ - ]") + geom_hline(yintercept = mode, col = "darkorange", linewidth=1.2, linetype = "dashed", show.legend = TRUE) + annotate("text", x = 1, y = mode, label = "Average", vjust = -0.3, col = "darkorange", size = 5)
         plot_Host <- designPlot(plot_Host)
         plot_Host <- plot_Host + theme(axis.text.x = element_text(size=12, angle=270, hjust=1, vjust=0.0), axis.ticks.x=element_blank())
         
@@ -160,7 +160,7 @@ server_rv <- function(input, output) {
         network_label <- as.vector(net_dc)
         # plot graph
         tmp <- data_sub[, c("Datacenter", "VM")]
-        tmp.g <- graph.data.frame(d = tmp, directed = FALSE)
+        tmp.g <- graph_from_data_frame(d = tmp, directed = FALSE)
         tmp.g <- add_vertices(tmp.g, length(net_dc), attr=new_vertices)
         plot_network_VM <- ggnet2(tmp.g, color = "steelblue", alpha = 0.75, size = 5, edge.alpha = 0.5, edge.color = "grey", label.size = 4, label.alpha = 1, label.color = "black", label = network_label)
         #plot_network_VM
@@ -172,7 +172,7 @@ server_rv <- function(input, output) {
         network_label <- as.vector(net_host)
         # plot graph
         tmp <- data_sub[, c("Host", "VM")]
-        tmp.g <- graph.data.frame(d = tmp, directed = FALSE)
+        tmp.g <- graph_from_data_frame(d = tmp, directed = FALSE)
         tmp.g <- add_vertices(tmp.g, length(net_host), attr=new_vertices)
         plot_network_Host <- ggnet2(tmp.g, color = "steelblue", alpha = 0.75, size = 5, edge.alpha = 0.5, edge.color = "grey", label.size = 4, label.alpha = 1, label.color = "black", label = network_label)
         #plot_network_Host
@@ -184,7 +184,7 @@ server_rv <- function(input, output) {
         network_label <- as.vector(net_network)
         # plot graph
         tmp <- data_sub[, c("Network_1", "VM")]
-        tmp.g <- graph.data.frame(d = tmp, directed = FALSE)
+        tmp.g <- graph_from_data_frame(d = tmp, directed = FALSE)
         tmp.g <- add_vertices(tmp.g, length(net_network), attr=new_vertices)
         plot_network_Network <- ggnet2(tmp.g, color = "steelblue", alpha = 0.75, size = 5, edge.alpha = 0.5, edge.color = "grey", label.size = 4, label.alpha = 1, label.color = "black", label = network_label)
         #plot_network_Network

@@ -92,15 +92,16 @@ generate_plots <- function(df, raw_df, praefix = "comp"){
   }else{
     df <- raw_df
   }
-  plot_list[[length(plot_list)+1]] <- designPlot(ggplot(df, aes(x=CPU)) + geom_density(alpha =.5, fill="steelblue", aes(y= ..scaled..)) + xlab("vCPU Count") + ylab("Density [ - ]") + xlim(c(-0.5,20)))
+  plot_list[[length(plot_list)+1]] <- designPlot(ggplot(df, aes(x=CPU)) + geom_density(alpha =.5, fill="steelblue", aes(y= after_stat(scaled))) + xlab("vCPU Count") + ylab("Density [ - ]") + xlim(c(-0.5,20)))
   
   # Plot Memory Density
-  plot_list[[length(plot_list)+1]] <- designPlot(ggplot(df, aes(x=Memory/1000)) + geom_density(alpha =.5, fill="steelblue", aes(y= ..scaled..)) + xlab("Memory [GB]") + ylab("Density [ - ]") + xlim(c(-0.5,60)))
+  plot_list[[length(plot_list)+1]] <- designPlot(ggplot(df, aes(x=Memory/1000)) + geom_density(alpha =.5, fill="steelblue", aes(y= after_stat(scaled))) + xlab("Memory [GB]") + ylab("Density [ - ]") + xlim(c(-0.5,60)))
   
   # Plot Storage Density
   tmp <- df[,c("Provisioned_MB", "In_Use_MB")]
-  tmp <- melt(tmp, value.name='Count', variable.name = 'Type') 
-  plot_list[[length(plot_list)+1]] <- designPlot(ggplot(tmp, aes(x=Count/1000, fill=Type)) + geom_density(alpha =.5, aes(y= ..scaled..)) + xlab("Storage [GB]") + ylab("Density [ - ]") + xlim(c(-0.5,2000))  + scale_fill_discrete(name ="", labels=c("Provisioned Storage [GB]", "Occupied Storage [GB]")))
+  tmp <- melt(tmp, measure.vars = c('Provisioned_MB', 'In_Use_MB'),
+              variable.name = 'Type', value.name = 'Count')
+  plot_list[[length(plot_list)+1]] <- designPlot(ggplot(tmp, aes(x=Count/1000, fill=Type)) + geom_density(alpha =.5, aes(y= after_stat(scaled))) + xlab("Storage [GiB]") + ylab("Density [ - ]") + xlim(c(-0.5,2000))  + scale_fill_discrete(name ="", labels=c("Provisioned Storage [GiB]", "Occupied Storage [GiB]")))
   
   return(plot_list)
 }
@@ -109,12 +110,12 @@ generate_slides <- function(df, plot_list, top_VM, praefix = "comp"){
   if(praefix == "comp"){
     # table all values
     tmp <- as.data.frame(df[, c("Description", "VM_Count", "n_VMs_on", "n_VMs_off", "Concurrent_Ratio", "CPU_Count", "Memory_Count", "Storage_Occupied", "Storage_Provisioned", "free_space")])
-    colnames(tmp) <- c("Description", "# VM's", "# VM's on", "# VM's off", "Concurrent Ratio [%]", "# vCPU's", "Memory [GB]", "Occupied Storage [GB]", "Provisioned Storage [GB]", "Free Space [%]")
+    colnames(tmp) <- c("Description", "# VM's", "# VM's on", "# VM's off", "Concurrent Ratio [%]", "# vCPU's", "Memory [GB]", "Occupied Storage [GiB]", "Provisioned Storage [GiB]", "Free Space [%]")
     slideTable(tmp, "Summary of collected components")
     
     # table: summary per VM, average
     tmp <- as.data.frame(df[, c("Description","VM_Count", "Concurrent_Ratio", "CPU_Count_per_VM", "Memory_Count_per_VM", "Storage_Occupied_per_VM", "Storage_Provisioned_per_VM")])
-    colnames(tmp) <- c("Description", "# VM's", "Concurrent Ratio [%]", "# vCPU's", "Memory [GB]", "Occupied Storage [GB]", "Provisioned Storage [GB]")
+    colnames(tmp) <- c("Description", "# VM's", "Concurrent Ratio [%]", "# vCPU's", "Memory [GB]", "Occupied Storage [GiB]", "Provisioned Storage [GiB]")
     slideTable(tmp, "Average values of collected components")
     
     # Plots
@@ -129,7 +130,7 @@ generate_slides <- function(df, plot_list, top_VM, praefix = "comp"){
     slidePlot(plot_list[[5]], "Distribution of occup. and provis. storage for all VM's")
     
     tmp <- as.data.frame(top_VM[, c("VM", "CPU", "Memory", "In_Use_MB", "Provisioned_MB", "Datacenter", "Host")])
-    colnames(tmp) <- c("VM Name", "# vCPU", "Memory [GB]", "Occupied Storage [GB]", "Provisioned Storage [GB]", "Datacenter", "Host")
+    colnames(tmp) <- c("VM Name", "# vCPU", "Memory [GB]", "Occupied Storage [GiB]", "Provisioned Storage [GiB]", "Datacenter", "Host")
     slideTable(tmp, "Top 5 VM's")
     
   }else{
@@ -137,12 +138,12 @@ generate_slides <- function(df, plot_list, top_VM, praefix = "comp"){
     
     # table all values
     tmp <- as.data.frame(df[, c("Description", "VM_Count", "n_VMs_on", "n_VMs_off", "Concurrent_Ratio", "CPU_Count", "Memory_Count", "Storage_Occupied", "Storage_Provisioned", "free_space")])
-    colnames(tmp) <- c("Description", "# VM's", "# VM's on", "# VM's off", "Concurrent Ratio [%]", "# vCPU's", "Memory [GB]", "Occupied Storage [GB]", "Provisioned Storage [GB]", "Free Space [%]")
+    colnames(tmp) <- c("Description", "# VM's", "# VM's on", "# VM's off", "Concurrent Ratio [%]", "# vCPU's", "Memory [GiB]", "Occupied Storage [GiB]", "Provisioned Storage [GB]", "Free Space [%]")
     slideTable(tmp, paste("Summary of collected components for: ", praefix, ""))
     
     # table: summary per VM
     tmp <- as.data.frame(df[, c("Description","VM_Count", "Concurrent_Ratio", "CPU_Count_per_VM", "Memory_Count_per_VM", "Storage_Occupied_per_VM", "Storage_Provisioned_per_VM")])
-    colnames(tmp) <- c("Description", "# VM's", "Concurrent Ratio [%]", "# vCPU's", "Memory [GB]", "Occupied Storage [GB]", "Provisioned Storage [GB]")
+    colnames(tmp) <- c("Description", "# VM's", "Concurrent Ratio [%]", "# vCPU's", "Memory [GB]", "Occupied Storage [GiB]", "Provisioned Storage [GiB]")
     slideTable(tmp, paste("Average values of collected components for: ", praefix, ""))
     
     slidePlot(plot_list[[1]], paste("Number of VM's for each profile - ", praefix, ""))
@@ -156,7 +157,7 @@ generate_slides <- function(df, plot_list, top_VM, praefix = "comp"){
     slidePlot(plot_list[[5]], paste("Distribution of occup. and provis. storage for all VM's - ", praefix, ""))
     
     tmp <- as.data.frame(top_VM[, c("VM", "CPU", "Memory", "In_Use_MB", "Provisioned_MB", "Datacenter", "Host")])
-    colnames(tmp) <- c("VM Name", "# vCPU", "Memory [GB]", "Occupied Storage [GB]", "Provisioned Storage [GB]", "Datacenter", "Host")
+    colnames(tmp) <- c("VM Name", "# vCPU", "Memory [GB]", "Occupied Storage [GiB]", "Provisioned Storage [GiB]", "Datacenter", "Host")
     slideTable(tmp, paste("Top 5 VM's for: ", praefix, ""))
   }  
 }
@@ -164,7 +165,7 @@ generate_slides <- function(df, plot_list, top_VM, praefix = "comp"){
 generate_overview_slide <- function(df){
   # table all values
   tmp <- as.data.frame(df[, c("Datacenter", "Host_Count","VM_Count", "CPU_Count", "Memory_Count", "Storage_Occupied", "Storage_Provisioned", "free_space")])
-  colnames(tmp) <- c("Datacenter", "# Hosts", "# VM's", "# vCPU's", "Memory [GB]", "Occupied Storage [GB]", "Provisioned Storage [GB]", "Free Space [%]")
+  colnames(tmp) <- c("Datacenter", "# Hosts", "# VM's", "# vCPU's", "Memory [GB]", "Occupied Storage [GiB]", "Provisioned Storage [GiB]", "Free Space [%]")
   slideTable(tmp, paste("Overview for ", nrow(df), " Datacenter", sep=""))
 }
 
