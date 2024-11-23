@@ -2,7 +2,6 @@
 source("libraries.R")
 source("server_rv.R")
 
-print(paste("Current working directory:", getwd()))
 
 ui <- dashboardPage(
   dashboardHeader(title = "graphR."),

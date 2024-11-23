@@ -104,12 +104,19 @@ server_rv <- function(input, output, session) {
   # Render the generated PDF in an iframe for viewing
   output$pdfview_rv <- renderUI({
     req(report_file())  # Ensure the report file has been generated
-    final_path <- paste0("/", gsub("www/", "", report_file()))  # Remove 'www/' to get the correct relative path
-    print(paste("Attempting to render PDF from:", final_path))  # Debugging line to check path
+    
+    # DEBUG
     print(paste("Current working directory:", getwd()))
     print("Contents of the current working directory:")
     print(list.files(getwd(), recursive = TRUE))
-    tags$iframe(style = "height:610px; width:100%; scrolling=yes", src = final_path)
+    print(paste("Report file:", report_file()))
+    final_path <- paste0("/", gsub("www/", "", report_file()))  # Remove 'www/' to get the correct relative path
+    print(paste("Final Path", final_path))  # Debugging line to check path
+    relative_path <- gsub("^www/", "", report_file())
+    print(paste("Attempting to render PDF from:", relative_path))  # Debugging line to check the final path
+
+
+    tags$iframe(style = "height:610px; width:100%; scrolling=yes", src = relative_path)
   })
 }
 
