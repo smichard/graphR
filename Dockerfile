@@ -11,6 +11,7 @@ RUN R -e "install.packages(c('ape', 'broom', 'compiler', 'digest', 'dplyr', 'fle
 
 # Copy the Shiny app code
 COPY graphr/ /home/shiny-app/
+RUN chmod -R 777 /home/shiny-app/www
 
 # Expose the application port
 EXPOSE 3838
