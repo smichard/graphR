@@ -284,9 +284,18 @@ server_rv <- function(input, output) {
         
         dev.off()
       
-      # Debugging: Check if the file exists
+      # Change ownership to 'shiny' and group to 'shiny'
+      system(paste("chown shiny:shiny", shQuote(file_name[2])))
+
+      # Change permissions to 644
+      system(paste("chmod 644", shQuote(file_name[2])))
+
+      # Debugging: Check if the file exists and permissions
       if (file.exists(file_name[2])) {
         cat("PDF successfully written to disk at:", file_name[2], "\n")
+        file_info <- file.info(file_name[2])
+        cat("File permissions:", file_info$mode, "\n")
+        cat("File owner:", file_info$uname, "\n")
       } else {
         cat("Failed to write PDF to disk at:", file_name[2], "\n")
       }
