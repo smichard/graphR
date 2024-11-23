@@ -2,7 +2,7 @@
 FROM rocker/shiny:4.4.2
 
 # Make a directory in the container
-RUN mkdir /home/shiny-app
+#RUN mkdir /home/shiny-app
 
 WORKDIR /home/shiny-app
 
@@ -11,13 +11,16 @@ RUN R -e "install.packages(c('ape', 'broom', 'compiler', 'digest', 'dplyr', 'fle
 
 # Copy the Shiny app code
 COPY graphr/ /home/shiny-app/
-RUN chmod -R 755 /home/shiny-app/www && chown -R shiny:shiny /home/shiny-app/www
+RUN chmod -R 755 /home/shiny-app/www && chown -R shiny:shiny /home/shiny-app
+#RUN chown -R shiny:shiny /home/shiny-app
 
 # Copy the Shiny configuration 
 COPY ./shiny-server.conf /etc/shiny-server/shiny-server.conf
 
 # Expose the application port
 EXPOSE 3838
+
+USER shiny
 
 # Run the R Shiny app
 CMD ["Rscript", "/home/shiny-app/app.R"]
