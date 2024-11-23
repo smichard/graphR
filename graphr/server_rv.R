@@ -193,7 +193,17 @@ server_rv <- function(input, output) {
         # progress
         setProgress(0.8, message = "Generating Slides")
         
+        cat("Starting to generate the PDF report...\n")
         file_name <- get_rep_name()
+
+        cat("PDF will be saved as:", file_name[2], "\n")
+        # Debugging: Check for write permissions
+        write_test <- file.access(dirname(file_name[2]), mode = 2)
+        if (write_test == 0) {
+          cat("Write permission confirmed for directory:", dirname(file_name[2]), "\n")
+        } else {
+          cat("No write permission for directory:", dirname(file_name[2]), "\n")
+        }
         
         # generate report
         # this is the part that build presentation.
@@ -273,6 +283,13 @@ server_rv <- function(input, output) {
         slideLast()
         
         dev.off()
+      
+      # Debugging: Check if the file exists
+      if (file.exists(file_name[2])) {
+        cat("PDF successfully written to disk at:", file_name[2], "\n")
+      } else {
+        cat("Failed to write PDF to disk at:", file_name[2], "\n")
+      }
         
       }) #progress
       
