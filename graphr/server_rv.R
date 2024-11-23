@@ -1,7 +1,13 @@
+# Load necessary options
 options(shiny.maxRequestSize = 50 * 1024^2)
 
+# Define server logic for the Shiny application
 server_rv <- function(input, output, session) {
   
+  # Reactive value to store the generated report file path
+  report_file <- reactiveVal(NULL)
+
+  # Reactive function to process the uploaded data file
   processed_data <- reactive({
     file1 <- input$file_rv
     req(file1)
@@ -16,11 +22,14 @@ server_rv <- function(input, output, session) {
     }
     standardize_columns(data)
   })
+
+  # Observe the file input to enable or disable the Generate button
   observe({
     shinyjs::disable(id = "Generate_rv")
     shinyjs::toggleState(id = "Generate_rv", condition = !is.null(input$file_rv))
   })
   
+  # Event to generate the report when the Generate button is clicked
   observeEvent(input$Generate_rv, {
     shinyjs::hide("pdfview_rv")
     shinyjs::show("progress_bar_rv")
@@ -34,7 +43,7 @@ server_rv <- function(input, output, session) {
         data_sub <- processed_data()
         
         # Prepare host information
-        overview_host <- prepare_host_information(data_sub, file_path)
+        overview_host <- prepare_host_information(data_sub, input$file_rv$datapath)
         
         # Progress: Calculations
         setProgress(0.3, message = "Performing Calculations")
@@ -74,25 +83,31 @@ server_rv <- function(input, output, session) {
         
         # Progress: Generating Slides
         setProgress(0.8, message = "Generating Slides")
-        file_name <- get_rep_name()
+        file_name <- paste0("www/report_", as.integer(Sys.time()), "_", sample(1000:9999, 1), ".pdf")
         
         # Generate the report
         generate_report(input, file_name, data_comp, plot_comp, top_VM_comp, data_list, plot_dc, top_VM_list, dc_list, overview_host, plot_Host, plot_OS, plot_network_VM, plot_network_Host, plot_network_Network)
-        
-        # Update UI element to display generated report
-        output$pdfview_rv <- renderUI({
-          tags$iframe(style = "height:610px; width:100%; scrolling=yes", src = file_name[1])
-        })
+
+        # Set permissions to ensure the report file is readable
+        system(paste("chmod 777", file_name))
+
+        # Update the reactive value with the generated file path
+        report_file(file_name)
         
         shinyjs::hide("progress_bar_rv")
         shinyjs::show("pdfview_rv")
       })
     })
   })
+
+  # Render the generated PDF in an iframe for viewing
+  output$pdfview_rv <- renderUI({
+    req(report_file())  # Ensure the report file has been generated
+    final_path <- gsub("www/", "", report_file())  # Remove 'www/' to get the correct relative path
+    print(paste("Attempting to render PDF from:", final_path))  # Debugging line to check path
+    tags$iframe(style = "height:610px; width:100%; scrolling=yes", src = final_path)
+  })
 }
-
-# Helper function to process input data
-
 
 # Helper function to prepare host information
 prepare_host_information <- function(data_sub, file_path) {
@@ -118,56 +133,6 @@ standardize_columns <- function(data) {
   data <- data[, cols]
   colnames(data) <- c("VM", "Powerstate", "CPU", "Memory", "Provisioned_MB", "In_Use_MB", "Datacenter", "OS", "Host", "Network_1")
   na.omit(data)
-}
-
-# Helper function to generate the report PDF
-generate_report <- function(input, file_name, data_comp, plot_comp, top_VM_comp, data_list, plot_dc, top_VM_list, dc_list, overview_host, plot_Host, plot_OS, plot_network_VM, plot_network_Host, plot_network_Network) {
-  
-  # Ensure the 'www' directory exists
-  if (!dir.exists("www")) {
-    dir.create("www")
-  }
-
-  # Define the full file name with path to the 'www' directory
-  file_name <- paste0("www/report_", as.integer(Sys.time()), "_", sample(1000:9999, 1), ".pdf")
-  
-  print(paste("Attempting to write PDF to:", file_name))
-  pdf(file = file_name, width = 16, height = 9)
-  
-  slideFirst(titleName = ifelse(isolate(input$title_rv) == "Report Title", "RV_Tools Summary", as.character(isolate(input$title_rv))),
-             authorName = ifelse(isolate(input$author_rv) == "Author of the Report", "Name", as.character(isolate(input$author_rv))),
-             documDate = Sys.Date())
-  
-  slideText("Find herein a summary of the provided RV_Tools.  \nThe following profiles were considered:\nLarge: VM's with 6 vCPU or more\nMedium: VM's with less than 6 vCPU and more than 2 vCPU\nSmall: VM's with 2 vCPU or less.",
-            "Introduction")
-  
-  if (length(dc_list) > 1) {
-    generate_overview_slide(data_overview)
-  }
-  
-  generate_slides(data_comp, plot_comp, top_VM_comp)
-  
-  if (length(dc_list) > 1) {
-    for (i in seq_along(dc_list)) {
-      generate_slides(data_list[[i]], plot_dc[[i]], top_VM_list[[i]], dc_list[i])
-    }
-  }
-  
-  slideChapter("Host and OS overview")
-  slidePlot(plot_Host, "Number of VM's for each Host")
-  slidePlot(plot_OS, "Overview of Operating Systems")
-  
-  if (!is.null(overview_host)) {
-    slideTable(overview_host, "Host overview")
-  }
-  
-  slideChapter("Cluster diagrams")
-  slidePlot(plot_network_VM, "Cluster: VM's per Datacenter")
-  slidePlot(plot_network_Host, "Cluster: VM's per Host")
-  slidePlot(plot_network_Network, "Cluster: VM's per Network")
-  
-  slideLast()
-  dev.off()
 }
 
 # Helper function to generate OS plot
@@ -204,4 +169,51 @@ generate_network_plot <- function(data_sub, group_col, vm_col) {
   tmp.g <- add_vertices(tmp.g, length(net), attr = new_vertices)
   
   ggnet2(tmp.g, color = "steelblue", alpha = 0.75, size = 5, edge.alpha = 0.5, edge.color = "grey", label.size = 4, label.alpha = 1, label.color = "black", label = network_label)
+}
+
+# Helper function to generate the report PDF
+generate_report <- function(input, file_name, data_comp, plot_comp, top_VM_comp, data_list, plot_dc, top_VM_list, dc_list, overview_host, plot_Host, plot_OS, plot_network_VM, plot_network_Host, plot_network_Network) {
+  
+  # Ensure the 'www' directory exists
+  if (!dir.exists("www")) {
+    dir.create("www")
+  }
+
+  # Create the PDF report
+  pdf(file = file_name, width = 16, height = 9)
+  
+  slideFirst(titleName = ifelse(isolate(input$title_rv) == "Report Title", "RV_Tools Summary", as.character(isolate(input$title_rv))),
+             authorName = ifelse(isolate(input$author_rv) == "Author of the Report", "Name", as.character(isolate(input$author_rv))),
+             documDate = Sys.Date())
+  
+  slideText("Find herein a summary of the provided RV_Tools.  \nThe following profiles were considered:\nLarge: VM's with 6 vCPU or more\nMedium: VM's with less than 6 vCPU and more than 2 vCPU\nSmall: VM's with 2 vCPU or less.",
+            "Introduction")
+  
+  if (length(dc_list) > 1) {
+    generate_overview_slide(data_overview)
+  }
+  
+  generate_slides(data_comp, plot_comp, top_VM_comp)
+  
+  if (length(dc_list) > 1) {
+    for (i in seq_along(dc_list)) {
+      generate_slides(data_list[[i]], plot_dc[[i]], top_VM_list[[i]], dc_list[i])
+    }
+  }
+  
+  slideChapter("Host and OS overview")
+  slidePlot(plot_Host, "Number of VM's for each Host")
+  slidePlot(plot_OS, "Overview of Operating Systems")
+  
+  if (!is.null(overview_host)) {
+    slideTable(overview_host, "Host overview")
+  }
+  
+  slideChapter("Cluster diagrams")
+  slidePlot(plot_network_VM, "Cluster: VM's per Datacenter")
+  slidePlot(plot_network_Host, "Cluster: VM's per Host")
+  slidePlot(plot_network_Network, "Cluster: VM's per Network")
+  
+  slideLast()
+  dev.off()
 }
