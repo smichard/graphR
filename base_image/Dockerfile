@@ -1,4 +1,4 @@
-FROM centos:7
+FROM centos:8
 
 # Installing Cent OS packages
 RUN yum -y update && yum -y install \
