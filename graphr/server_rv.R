@@ -90,7 +90,6 @@ server_rv <- function(input, output, session) {
 
         # Set permissions to ensure the report file is readable
         system(paste("chmod 777", file_name))
-        system(paste("chown shiny:shiny", file_name))
 
         # Update the reactive value with the generated file path
         report_file(file_name)
@@ -116,7 +115,7 @@ server_rv <- function(input, output, session) {
     print(paste("Attempting to render PDF from:", relative_path))  # Debugging line to check the final path
 
 
-    tags$iframe(style = "height:610px; width:100%; scrolling=yes", src = relative_path)
+    tags$iframe(style = "height:610px; width:100%; scrolling=yes", src = report_file())
   })
 }
 
