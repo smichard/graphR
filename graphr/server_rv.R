@@ -90,6 +90,7 @@ server_rv <- function(input, output, session) {
 
         # Set permissions to ensure the report file is readable
         system(paste("chmod 777", file_name))
+        system(paste("chown shiny:shiny", file_name))
 
         # Update the reactive value with the generated file path
         report_file(file_name)
@@ -103,8 +104,11 @@ server_rv <- function(input, output, session) {
   # Render the generated PDF in an iframe for viewing
   output$pdfview_rv <- renderUI({
     req(report_file())  # Ensure the report file has been generated
-    final_path <- gsub("www/", "", report_file())  # Remove 'www/' to get the correct relative path
+    final_path <- paste0("/", gsub("www/", "", report_file()))  # Remove 'www/' to get the correct relative path
     print(paste("Attempting to render PDF from:", final_path))  # Debugging line to check path
+    print(paste("Current working directory:", getwd()))
+    print("Contents of the current working directory:")
+    print(list.files(getwd(), recursive = TRUE))
     tags$iframe(style = "height:610px; width:100%; scrolling=yes", src = final_path)
   })
 }
