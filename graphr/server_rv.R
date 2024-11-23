@@ -122,7 +122,17 @@ standardize_columns <- function(data) {
 
 # Helper function to generate the report PDF
 generate_report <- function(input, file_name, data_comp, plot_comp, top_VM_comp, data_list, plot_dc, top_VM_list, dc_list, overview_host, plot_Host, plot_OS, plot_network_VM, plot_network_Host, plot_network_Network) {
-  pdf(file = file_name[2], width = 16, height = 9)
+  
+  # Ensure the 'www' directory exists
+  if (!dir.exists("www")) {
+    dir.create("www")
+  }
+
+  # Define the full file name with path to the 'www' directory
+  file_name <- paste0("www/report_", as.integer(Sys.time()), "_", sample(1000:9999, 1), ".pdf")
+  
+  print(paste("Attempting to write PDF to:", file_name))
+  pdf(file = file_name, width = 16, height = 9)
   
   slideFirst(titleName = ifelse(isolate(input$title_rv) == "Report Title", "RV_Tools Summary", as.character(isolate(input$title_rv))),
              authorName = ifelse(isolate(input$author_rv) == "Author of the Report", "Name", as.character(isolate(input$author_rv))),
