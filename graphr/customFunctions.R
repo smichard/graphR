@@ -78,7 +78,7 @@ get_top_VM <- function(df){
 generate_plots <- function(df, raw_df, praefix = "comp"){
   # Plot VM count
   plot_list <- list()
-  plot_list[[length(plot_list)+1]] <- designPlot(ggplot(df, aes(x=Description, y=VM_Count))  + geom_bar(stat="identity", width=.7, fill="steelblue") + xlab("VM Profile") + ylab("Number of VM's") + geom_text(aes(label=VM_Count), vjust=1.6, color="white", size=5.5, fontface="bold") + guides(fill=FALSE))
+  plot_list[[length(plot_list)+1]] <- designPlot(ggplot(df, aes(x=Description, y=VM_Count))  + geom_bar(stat="identity", width=.7, fill="steelblue") + xlab("VM Profile") + ylab("Number of VM's") + geom_text(aes(label=VM_Count), vjust=1.6, color="white", size=5.5, fontface="bold") + guides(fill="none"))
   
   # Plot Power Status
   tmp <- df[, c("Description", "VM_Count", "n_VMs_on", "n_VMs_off")]
