@@ -1,13 +1,19 @@
-FROM eu.gcr.io/storied-network-317810/graphr-base
+# Base R Shiny image
+FROM rocker/shiny:4.4.2
 
-# Copying source code and cron job
-COPY ./graphr /srv/shiny-server/graphr
-COPY ./shiny-server.conf /etc/shiny-server/shiny-server.conf
-COPY cleaning_job.sh /cleaning_job.sh
-COPY crontab_entry.txt /etc/cron.d/cleaning-job
+# Make a directory in the container
+RUN mkdir /home/shiny-app
 
-RUN chmod +x /cleaning_job.sh && chmod 0644 /etc/cron.d/cleaning-job && touch /var/log/cron.log
+WORKDIR /home/shiny-app
 
+# Install R dependencies
+RUN R -e "install.packages(c('ape', 'broom', 'compiler', 'digest', 'dplyr', 'flexdashboard', 'forcats', 'GGally', 'ggplot2', 'graph', 'igraphdata', 'igraph', 'intergraph', 'irlba', 'maps', 'magrittr', 'markdown', 'network', 'NMF', 'pkgconfig', 'png', 'RColorBrewer', 'readxl', 'reshape2', 'rgl', 'rmarkdown', 'scales', 'shinydashboard', 'shinyjs', 'sna', 'statnet.common', 'stats4', 'tcltk', 'testthat', 'tibble'), repos='https://cran.rstudio.com/')"
+
+# Copy the Shiny app code
+COPY graphr/ /home/shiny-app/
+
+# Expose the application port
 EXPOSE 3838
 
-CMD [ "/bin/sh", "-c", "/usr/sbin/crond & /usr/bin/shiny-server" ]
+# Run the R Shiny app
+CMD ["Rscript", "/home/shiny-app/app.R"]
