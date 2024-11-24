@@ -296,8 +296,6 @@ server_rv <- function(input, output) {
       } else {
         cat("Failed to write PDF to disk at:", file_name[2], "\n")
       }
-      # Output the effective UID
-      cat("Effective UID:", Sys.getuid(), "\n")
 
       }) #progress
       
