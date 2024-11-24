@@ -1,9 +1,6 @@
 # Base R Shiny image
 FROM rocker/shiny:4.4.2
 
-# Make a directory in the container
-#RUN mkdir /home/shiny-app
-
 WORKDIR /home/shiny-app
 
 # Install R dependencies
@@ -15,8 +12,6 @@ COPY graphr/ /home/shiny-app/
 # Create the logs and bookmarks directories and set permissions
 RUN mkdir -p /home/shiny-app/logs /home/shiny-app/bookmarks && \
     chmod -R 777 /home/shiny-app
-#RUN chmod -R og+rX /home/shiny-app
-#RUN chown -R shiny:shiny /home/shiny-app
 
 # Copy the Shiny configuration to a writable location
 COPY shiny-server.conf /home/shiny-app/shiny-server.conf
@@ -25,13 +20,8 @@ COPY shiny-server.conf /home/shiny-app/shiny-server.conf
 COPY run.sh /usr/bin/run.sh
 RUN chmod +x /usr/bin/run.sh
 
-# Copy the Shiny configuration 
-#COPY ./shiny-server.conf /etc/shiny-server/shiny-server.conf
-
 # Expose the application port
 EXPOSE 3838
-
-#USER shiny
 
 # Run the R Shiny app
 #CMD ["Rscript", "/home/shiny-app/app.R"]
