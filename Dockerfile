@@ -24,3 +24,4 @@ EXPOSE 3838
 
 # Run the R Shiny app
 #CMD ["Rscript", "/home/shiny-app/app.R"]
+CMD ["/usr/bin/shiny-server"]
