@@ -9,9 +9,12 @@ RUN R -e "install.packages(c('ape', 'broom', 'compiler', 'digest', 'dplyr', 'fle
 # Copy the Shiny app code
 COPY graphr/ /home/shiny-app/
 
-# Create the logs and bookmarks directories and set permissions
+# Create necessary directories and set permissions
 RUN mkdir -p /home/shiny-app/logs /home/shiny-app/bookmarks && \
-    chmod -R 777 /home/shiny-app
+    chown -R shiny:shiny /home/shiny-app && \
+    chmod -R 755 /home/shiny-app && \
+    chmod -R 775 /home/shiny-app/logs /home/shiny-app/bookmarks /home/shiny-app/www
+
 
 # Copy the Shiny configuration to a writable location
 COPY shiny-server.conf /home/shiny-app/shiny-server.conf
