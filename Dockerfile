@@ -20,7 +20,7 @@ COPY ./shiny-server.conf /etc/shiny-server/shiny-server.conf
 # Expose the application port
 EXPOSE 3838
 
-USER shiny
+#USER shiny
 
 # Run the R Shiny app
 CMD ["Rscript", "/home/shiny-app/app.R"]

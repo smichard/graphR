@@ -283,9 +283,6 @@ server_rv <- function(input, output) {
         slideLast()
         
         dev.off()
-      
-      # Change ownership to 'shiny' and group to 'shiny'
-      system(paste("chown shiny:shiny", shQuote(file_name[2])))
 
       # Change permissions to 644
       system(paste("chmod 644", shQuote(file_name[2])))
@@ -299,7 +296,9 @@ server_rv <- function(input, output) {
       } else {
         cat("Failed to write PDF to disk at:", file_name[2], "\n")
       }
-        
+      # Output the effective UID
+      cat("Effective UID:", Sys.getuid(), "\n")
+
       }) #progress
       
       output$pdfview_rv <- renderUI({
