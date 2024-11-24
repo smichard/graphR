@@ -9,12 +9,12 @@ RUN R -e "install.packages(c('ape', 'broom', 'compiler', 'digest', 'dplyr', 'fle
 # Copy the Shiny app code
 COPY graphr/ /home/shiny-app/
 
-# Create necessary directories and set permissions
-RUN mkdir -p /home/shiny-app/logs /home/shiny-app/bookmarks && \
-    chown -R shiny:shiny /home/shiny-app && \
-    chmod -R 755 /home/shiny-app && \
-    chmod -R 775 /home/shiny-app/logs /home/shiny-app/bookmarks /home/shiny-app/www
+# Create necessary directories
+RUN mkdir -p /home/shiny-app/logs /home/shiny-app/bookmarks
 
+# Set ownership and permissions
+RUN chown -R shiny:root /home/shiny-app && \
+    chmod -R 775 /home/shiny-app
 
 # Copy the Shiny configuration to a writable location
 COPY shiny-server.conf /home/shiny-app/shiny-server.conf
