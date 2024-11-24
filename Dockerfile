@@ -11,9 +11,13 @@ RUN R -e "install.packages(c('ape', 'broom', 'compiler', 'digest', 'dplyr', 'fle
 
 # Copy the Shiny app code
 COPY graphr/ /home/shiny-app/
-RUN chmod -R 777 /home/shiny-app
+RUN chmod -R 755 /home/shiny-app
 RUN chmod -R og+rX /home/shiny-app
 #RUN chown -R shiny:shiny /home/shiny-app
+
+# Copy the startup script
+COPY run.sh /usr/bin/run.sh
+RUN chmod +x /usr/bin/run.sh
 
 # Copy the Shiny configuration 
 COPY ./shiny-server.conf /etc/shiny-server/shiny-server.conf
@@ -25,4 +29,4 @@ EXPOSE 3838
 
 # Run the R Shiny app
 #CMD ["Rscript", "/home/shiny-app/app.R"]
-CMD ["/usr/bin/shiny-server"]
+CMD ["/usr/bin/run.sh"]
