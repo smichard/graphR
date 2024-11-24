@@ -11,7 +11,10 @@ RUN R -e "install.packages(c('ape', 'broom', 'compiler', 'digest', 'dplyr', 'fle
 
 # Copy the Shiny app code
 COPY graphr/ /home/shiny-app/
-RUN chmod -R 777 /home/shiny-app
+
+# Create the logs directory and set permissions
+RUN mkdir -p /home/shiny-app/logs && \
+    chmod -R 777 /home/shiny-app
 #RUN chmod -R og+rX /home/shiny-app
 #RUN chown -R shiny:shiny /home/shiny-app
 
