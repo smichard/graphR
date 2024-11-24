@@ -11,16 +11,19 @@ RUN R -e "install.packages(c('ape', 'broom', 'compiler', 'digest', 'dplyr', 'fle
 
 # Copy the Shiny app code
 COPY graphr/ /home/shiny-app/
-RUN chmod -R 755 /home/shiny-app
-RUN chmod -R og+rX /home/shiny-app
+RUN chmod -R 777 /home/shiny-app
+#RUN chmod -R og+rX /home/shiny-app
 #RUN chown -R shiny:shiny /home/shiny-app
+
+# Copy the Shiny configuration to a writable location
+COPY shiny-server.conf /home/shiny-app/shiny-server.conf
 
 # Copy the startup script
 COPY run.sh /usr/bin/run.sh
 RUN chmod +x /usr/bin/run.sh
 
 # Copy the Shiny configuration 
-COPY ./shiny-server.conf /etc/shiny-server/shiny-server.conf
+#COPY ./shiny-server.conf /etc/shiny-server/shiny-server.conf
 
 # Expose the application port
 EXPOSE 3838
