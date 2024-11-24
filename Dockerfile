@@ -23,4 +23,4 @@ EXPOSE 3838
 #USER shiny
 
 # Run the R Shiny app
-CMD ["Rscript", "/home/shiny-app/app.R"]
+#CMD ["Rscript", "/home/shiny-app/app.R"]
