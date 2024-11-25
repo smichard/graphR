@@ -53,7 +53,7 @@ server_rv <- function(input, output) {
             stop(paste("The following required columns are missing from the data:", paste(missing_columns, collapse=", "), "\nPlease read the instructions carefully."))
           }
           data_sub <- data[, required_columns]
-          colnames(data_sub) <- c("VM", "Powerstate", "CPU", "Memory", "Provisioned_MB", "In_Use_MB", "Datacenter", "OS", "Host", "Network_1")
+          colnames(data_sub) <- c("VM", "Powerstate", "CPU", "Memory", "Provisioned_MiB", "In_Use_MiB", "Datacenter", "OS", "Host", "Network_1")
           data_sub <- na.omit(data_sub)
           
           # import host information

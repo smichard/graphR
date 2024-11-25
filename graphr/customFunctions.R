@@ -38,8 +38,8 @@ get_stats <- function(df){
     mutate(VM_on = ifelse(Powerstate =="poweredOn", 1, 0)) %>%
     group_by(Description) %>%
     summarise(VM_Count = n(), n_VMs_on = sum(VM_on), n_VMs_off = n()-sum(VM_on), Concurrent_Ratio = round(n_VMs_on*100/(VM_Count), 1),
-              CPU_Count = sum(CPU), Memory_Count = round(sum(Memory)/1000, 1), Storage_Occupied = round(sum(In_Use_MB)/1000, 1),
-              Storage_Provisioned = round(sum(Provisioned_MB)/1000, 1), free_space = round(100-Storage_Occupied/Storage_Provisioned*100 ,1),
+              CPU_Count = sum(CPU), Memory_Count = round(sum(Memory)/1000, 1), Storage_Occupied = round(sum(In_Use_MiB)/1000, 1),
+              Storage_Provisioned = round(sum(Provisioned_MiB)/1000, 1), free_space = round(100-Storage_Occupied/Storage_Provisioned*100 ,1),
               CPU_Count_per_VM = round(CPU_Count/VM_Count, 1), Memory_Count_per_VM = round(Memory_Count/VM_Count, 1),
               Storage_Occupied_per_VM = round(Storage_Occupied/VM_Count, 1), Storage_Provisioned_per_VM = round(Storage_Provisioned/VM_Count, 1))
   
@@ -60,8 +60,8 @@ get_stats <- function(df){
 get_stats_overview <- function(df){
   overview <- df %>%
     group_by(Datacenter) %>%
-    summarise(Host_Count = n_distinct(Host), VM_Count = n(), CPU_Count = sum(CPU), Memory_Count = round(sum(Memory)/1000, 1), Storage_Occupied = round(sum(In_Use_MB)/1000, 1),
-              Storage_Provisioned = round(sum(Provisioned_MB)/1000, 1), free_space = round(100-Storage_Occupied/Storage_Provisioned*100 ,1)) %>%
+    summarise(Host_Count = n_distinct(Host), VM_Count = n(), CPU_Count = sum(CPU), Memory_Count = round(sum(Memory)/1000, 1), Storage_Occupied = round(sum(In_Use_MiB)/1000, 1),
+              Storage_Provisioned = round(sum(Provisioned_MiB)/1000, 1), free_space = round(100-Storage_Occupied/Storage_Provisioned*100 ,1)) %>%
     arrange(desc(CPU_Count))
   return(overview)
 }
@@ -71,7 +71,7 @@ get_top_VM <- function(df){
   top_VM <- df %>%
     arrange(desc(CPU), desc(Memory)) %>%
     slice(1:5) %>%
-    mutate(Memory = round(Memory / 1000, 1), In_Use_MB = round(In_Use_MB/1000, 1), Provisioned_MB = round(Provisioned_MB/1000, 1))
+    mutate(Memory = round(Memory / 1000, 1), In_Use_MiB = round(In_Use_MiB/1000, 1), Provisioned_MiB = round(Provisioned_MiB/1000, 1))
   return(top_VM)
 }
 
@@ -98,8 +98,8 @@ generate_plots <- function(df, raw_df, praefix = "comp"){
   plot_list[[length(plot_list)+1]] <- designPlot(ggplot(df, aes(x=Memory/1000)) + geom_density(alpha =.5, fill="steelblue", aes(y= after_stat(scaled))) + xlab("Memory [GB]") + ylab("Density [ - ]") + xlim(c(-0.5,60)))
   
   # Plot Storage Density
-  tmp <- df[,c("Provisioned_MB", "In_Use_MB")]
-  tmp <- melt(tmp, measure.vars = c('Provisioned_MB', 'In_Use_MB'),
+  tmp <- df[,c("Provisioned_MiB", "In_Use_MiB")]
+  tmp <- melt(tmp, measure.vars = c('Provisioned_MiB', 'In_Use_MiB'),
               variable.name = 'Type', value.name = 'Count')
   plot_list[[length(plot_list)+1]] <- designPlot(ggplot(tmp, aes(x=Count/1000, fill=Type)) + geom_density(alpha =.5, aes(y= after_stat(scaled))) + xlab("Storage [GiB]") + ylab("Density [ - ]") + xlim(c(-0.5,2000))  + scale_fill_discrete(name ="", labels=c("Provisioned Storage [GiB]", "Occupied Storage [GiB]")))
   
@@ -129,7 +129,7 @@ generate_slides <- function(df, plot_list, top_VM, praefix = "comp"){
     
     slidePlot(plot_list[[5]], "Distribution of occup. and provis. storage for all VM's")
     
-    tmp <- as.data.frame(top_VM[, c("VM", "CPU", "Memory", "In_Use_MB", "Provisioned_MB", "Datacenter", "Host")])
+    tmp <- as.data.frame(top_VM[, c("VM", "CPU", "Memory", "In_Use_MiB", "Provisioned_MiB", "Datacenter", "Host")])
     colnames(tmp) <- c("VM Name", "# vCPU", "Memory [GB]", "Occupied Storage [GiB]", "Provisioned Storage [GiB]", "Datacenter", "Host")
     slideTable(tmp, "Top 5 VM's")
     
@@ -156,7 +156,7 @@ generate_slides <- function(df, plot_list, top_VM, praefix = "comp"){
     
     slidePlot(plot_list[[5]], paste("Distribution of occup. and provis. storage for all VM's - ", praefix, ""))
     
-    tmp <- as.data.frame(top_VM[, c("VM", "CPU", "Memory", "In_Use_MB", "Provisioned_MB", "Datacenter", "Host")])
+    tmp <- as.data.frame(top_VM[, c("VM", "CPU", "Memory", "In_Use_MiB", "Provisioned_MiB", "Datacenter", "Host")])
     colnames(tmp) <- c("VM Name", "# vCPU", "Memory [GB]", "Occupied Storage [GiB]", "Provisioned Storage [GiB]", "Datacenter", "Host")
     slideTable(tmp, paste("Top 5 VM's for: ", praefix, ""))
   }  
