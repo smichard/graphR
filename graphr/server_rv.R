@@ -1,6 +1,15 @@
 options(shiny.maxRequestSize=50*1024^2) 
 
-server_rv <- function(input, output) {
+server_rv <- function(input, output, session) {
+  # Create a subdirectory in tempdir() for this session
+  temp_dir <- tempdir()
+  user_subdir <- file.path(temp_dir, paste0("session_", as.integer(Sys.time()), floor(runif(1, min=1000, max=9999))))
+  dir.create(user_subdir, showWarnings = FALSE)
+
+  # Map a URL path to the user_subdir
+  resource_path <- paste0("tmp", floor(runif(1, min=1000, max=9999)))
+  shiny::addResourcePath(resource_path, user_subdir)
+  
   observe({
     shinyjs::disable(id = "Generate_rv")
     shinyjs::toggleState(id = "Generate_rv",condition = !is.null(input$file_rv))
@@ -194,7 +203,7 @@ server_rv <- function(input, output) {
         setProgress(0.8, message = "Generating Slides")
         
         cat("Starting to generate the PDF report...\n")
-        file_name <- get_rep_name()
+        file_name <- get_rep_name(user_subdir)
 
         cat("PDF will be saved as:", file_name[2], "\n")
         # Debugging: Check for write permissions
@@ -300,11 +309,17 @@ server_rv <- function(input, output) {
       }) #progress
       
       output$pdfview_rv <- renderUI({
-        tags$iframe(style="height:610px; width:100%; scrolling=yes", 
-                    src=file_name[1])
+        tags$iframe(style = "height:610px; width:100%; scrolling=yes",
+                    src = paste0("/", resource_path, "/", file_name[1]))
       })
       shinyjs::hide("progress_bar_rv")
       shinyjs::show("pdfview_rv")
     }) #progress
   })
+
+  # Clean up temporary files when the session ends
+  session$onSessionEnded(function() {
+    unlink(user_subdir, recursive = TRUE)
+  })
+
 }
