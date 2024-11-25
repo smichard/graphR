@@ -1,19 +1,25 @@
 options(shiny.maxRequestSize=50*1024^2) 
 
-server_rv <- function(input, output, session) {
+server_rv <- function(input, output) {
   # Create a subdirectory in tempdir() for this session
-  temp_dir <- tempdir()
-  user_subdir <- file.path(temp_dir, paste0("session_", as.integer(Sys.time()), floor(runif(1, min=1000, max=9999))))
-  dir.create(user_subdir, showWarnings = FALSE)
+  #temp_dir <- tempdir()
+  #user_subdir <- file.path(temp_dir, paste0("session_", as.integer(Sys.time()), floor(runif(1, min=1000, max=9999))))
+  #dir.create(user_subdir, showWarnings = FALSE)
 
   # Map a URL path to the user_subdir
-  resource_path <- paste0("tmp", floor(runif(1, min=1000, max=9999)))
-  shiny::addResourcePath(resource_path, user_subdir)
+  #resource_path <- paste0("tmp", floor(runif(1, min=1000, max=9999)))
+  #shiny::addResourcePath(resource_path, user_subdir)
   
+  # Create a temp directory within www
+  temp_dir <- file.path("www", "tmp")
+  if (!dir.exists(temp_dir)) {
+    dir.create(temp_dir, recursive = TRUE)
+  }
+
+
   observe({
     shinyjs::disable(id = "Generate_rv")
     shinyjs::toggleState(id = "Generate_rv",condition = !is.null(input$file_rv))
-    
   })
   
   
@@ -203,7 +209,9 @@ server_rv <- function(input, output, session) {
         setProgress(0.8, message = "Generating Slides")
         
         cat("Starting to generate the PDF report...\n")
-        file_name <- get_rep_name(user_subdir)
+        file_name <- get_rep_name(temp_dir)
+        # Log the folder name to the console
+        cat("File name:", file_name, "\n")
 
         cat("PDF will be saved as:", file_name[2], "\n")
         # Debugging: Check for write permissions
@@ -293,6 +301,11 @@ server_rv <- function(input, output, session) {
         
         dev.off()
 
+        # Clean up old files
+        old_files <- list.files(temp_dir, full.names = TRUE)
+        file_info <- file.info(old_files)
+        unlink(old_files[file_info$mtime < (Sys.time() - 3600)])
+
       # Change permissions to 644
       system(paste("chmod 644", shQuote(file_name[2])))
 
@@ -310,16 +323,11 @@ server_rv <- function(input, output, session) {
       
       output$pdfview_rv <- renderUI({
         tags$iframe(style = "height:610px; width:100%; scrolling=yes",
-                    src = paste0("/", resource_path, "/", file_name[1]))
+                    src = paste0("tmp/", file_name[1]))
       })
       shinyjs::hide("progress_bar_rv")
       shinyjs::show("pdfview_rv")
     }) #progress
-  })
-
-  # Clean up temporary files when the session ends
-  session$onSessionEnded(function() {
-    unlink(user_subdir, recursive = TRUE)
   })
 
 }

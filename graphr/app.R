@@ -55,8 +55,8 @@ ui <- dashboardPage(
     )
   )
 )
-server <- function(input, output, session) {
-  server_rv(input, output, session)
+server <- function(input, output) {
+  server_rv(input, output)
   
   url <- a("Consider supporting", href="https://www.buymeacoffee.com/graphr")
   output$tab <- renderUI({
