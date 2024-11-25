@@ -20,7 +20,7 @@ spec:
       containers:
       - name: graphr
         image: quay.io/michard/graphr:latest
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         ports:
         - containerPort: 3838
           protocol: TCP
@@ -40,7 +40,8 @@ spec:
   selector:
     app: graphr
   ports:
-    - protocol: TCP
+    - name: http
+      protocol: TCP
       port: 80
       targetPort: 3838
 ---
@@ -56,6 +57,6 @@ spec:
     kind: Service
     name: graphr-srv
   port:
-    targetPort: 80
+    targetPort: http
   tls:
     termination: edge
