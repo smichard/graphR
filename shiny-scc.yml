@@ -1,0 +1,34 @@
+apiVersion: security.openshift.io/v1
+kind: SecurityContextConstraints
+metadata:
+  name: shiny-scc
+allowHostDirVolumePlugin: false
+allowHostIPC: false
+allowHostNetwork: false
+allowHostPID: false
+allowHostPorts: false
+allowPrivilegeEscalation: false
+allowPrivilegedContainer: false
+defaultAddCapabilities: []
+fsGroup:
+  type: MustRunAs
+  ranges:
+  - max: 997
+    min: 997
+runAsUser:
+  type: MustRunAs
+  uid: 997
+seLinuxContext:
+  type: RunAsAny
+supplementalGroups:
+  type: MustRunAs
+  ranges:
+  - max: 997
+    min: 997
+volumes:
+- configMap
+- emptyDir
+- persistentVolumeClaim
+- projected
+- secret
+priority: 10
