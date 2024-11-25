@@ -10,17 +10,17 @@ RUN R -e "install.packages(c('ape', 'broom', 'compiler', 'digest', 'dplyr', 'fle
 COPY graphr/ /home/shiny-app/
 
 # Create necessary directories and set permissions
-RUN mkdir -p /home/shiny-app/logs /home/shiny-app/bookmarks && \
-    chown -R shiny:shiny /home/shiny-app && \
-    chmod -R 755 /home/shiny-app && \
-    chmod -R 700 /home/shiny-app/logs /home/shiny-app/bookmarks /home/shiny-app/www
+#RUN mkdir -p /home/shiny-app/logs /home/shiny-app/bookmarks && \
+RUN chown -R shiny:shiny /home/shiny-app
+    #chmod -R 755 /home/shiny-app && \
+    #chmod -R 700 /home/shiny-app/logs /home/shiny-app/bookmarks /home/shiny-app/www
 
 # Copy the Shiny configuration to a writable location
 COPY shiny-server.conf /home/shiny-app/shiny-server.conf
 
 # Copy the startup script
-COPY run.sh /usr/bin/run.sh
-RUN chmod +x /usr/bin/run.sh
+#COPY run.sh /usr/bin/run.sh
+#RUN chmod +x /usr/bin/run.sh
 
 # Switch to the shiny user
 USER shiny
@@ -30,4 +30,5 @@ EXPOSE 3838
 
 # Run the R Shiny app
 #CMD ["Rscript", "/home/shiny-app/app.R"]
-CMD ["/usr/bin/run.sh"]
+#CMD ["/usr/bin/run.sh"]
+CMD ["/usr/bin/shiny-server"]
