@@ -1,4 +1,6 @@
 # graphR.
+[![Docker Repository on Quay](https://quay.io/repository/michard/graphr/status "Docker Repository on Quay")](https://quay.io/repository/michard/graphr)
+
 <a href="https://www.graphr.de"><img src = "graphr/www/graphR_logo.png" width = "200" align="left"></a> 
 The purpose of **graphR.** is to automatize and simplify the analysis of RVTools exports and to give a visual presentation of the information contained within one Excel export. [RVTools](http://www.robware.net/rvtools/) is a VMware utility that connects to a vCenter and gathers information with an impressive level of detail on the VMware environment (e. g. on virtual machines, on ESX hosts, on the network configuration). The data collection is fast and easy. The result can be stored in a Microsoft Excel file. RVTools exports are a great way to collect data on VMware environments. However, analyzing RVTool exports, especially of complex environments can be time-consuming, error-prone, and cumbersome.  
 That's where **graphR.** steps in. **GraphR.** processes RVTool exports which are saved as Microsoft Excel or as comma-separated files. It performs some statistical analysis on the data contained within the Microsoft Excel file. The dataset is visualized through some beautiful-looking diagrams. Finally, all tables and charts are assembled in one downloadable PDF report. Hence **graphR.** enables you to generate a concise report with some great graphics
@@ -70,6 +72,76 @@ The use of graphR. is designed to be simple:
 get a glimpse through this YouTube video:
 
 <a href="https://youtu.be/dotbSX79FJg"><img src = "graphr/www/graphR_screenshot.jpg" width = "400" align="center"></a> 
+
+## Deploy on OpenShift
+To deploy graphR. on OpenShift, follow these steps:
+
+1. Apply the Security Context Constraints (SCC):
+Apply the `shiny-scc.yml` configuration to your OpenShift cluster to create a custom SCC. This SCC ensures that the application has the necessary permissions to run.
+```bash
+oc apply -f shiny-scc.yaml
+```
+
+2. Create a Service Account:
+Generate a new service account named shiny-sa that will be associated with your application deployment.
+```bash
+oc create serviceaccount shiny-sa
+```
+
+3. Associate the SCC with the Service Account:
+Grant the shiny-scc permissions to the shiny-sa service account to allow the application to run under the defined security policies.
+```bash
+oc adm policy add-scc-to-user shiny-scc -z shiny-sa
+```
+
+4. Apply the Deployment Configuration:
+Deploy graphR. by applying the graphr-deployment.yaml file. Ensure you are targeting the correct namespace (e.g., graphr).
+```bash
+oc apply -f graphr-deployment.yaml -n graphr
+```
+
+5. Access the Application:
+Retrieve the route URL to access your graphR. application.
+```bash
+oc get route graphr-route -n graphr
+```
+Open the obtained URL in your web browser to start using graphR.
+
+
+## Deploy on Google Cloud Run
+Deploying graphR. on Google Cloud Run allows you to run the application in a scalable, serverless environment. Follow these steps:
+
+1. Build and Push the Docker Image:
+
+Build your Docker image and push it to Google Container Registry (GCR):
+
+```bash
+# Build the Docker image
+docker build -t gcr.io/your-project-id/graphr .
+
+# Push the Docker image to GCR
+docker push gcr.io/your-project-id/graphr
+```
+Replace `your-project-id` with your actual Google Cloud project ID.
+
+2. Deploy to Cloud Run:
+
+Use the gcloud command-line tool to deploy graphR. to Cloud Run:
+```bash
+gcloud run deploy graphr \
+  --image gcr.io/your-project-id/graphr \
+  --platform managed \
+  --region us-central1 \
+  --allow-unauthenticated \
+  --port 3838
+```
+- --platform managed specifies that you're using the fully managed version of Cloud Run.
+- --allow-unauthenticated makes the service publicly accessible. Omit this flag if you want to restrict access.
+- Adjust --region to a region close to your users or infrastructure.
+
+3. Access the Application:
+
+Upon successful deployment, the command will output a URL where the service is accessible. Open this URL in your web browser to start using graphR.
 
 ## Built With
 
