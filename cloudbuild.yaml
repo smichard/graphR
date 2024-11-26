@@ -6,8 +6,6 @@ steps:
   args:
   - 'build'
   - '-t'
-  - 'eu.gcr.io/$PROJECT_ID/graphr-app:$BUILD_ID'
-  - '-t'
   - 'eu.gcr.io/$PROJECT_ID/graphr-app:latest'
   - '.'
 
@@ -28,7 +26,7 @@ steps:
   - 'deploy'
   - 'graphr-app'
   - '--image'
-  - 'eu.gcr.io/$PROJECT_ID/graphr-app:$BUILD_ID'
+  - 'eu.gcr.io/$PROJECT_ID/graphr-app:$latest'
   - '--region'
   - 'europe-north1'
   - '--platform'
