@@ -6,9 +6,9 @@ steps:
   args:
   - 'build'
   - '-t'
-  - 'eu.gcr.io/storied-network-317810/graphr-app:$BUILD_ID'
+  - 'eu.gcr.io/$PROJECT_ID/graphr-app:$BUILD_ID'
   - '-t'
-  - 'eu.gcr.io/storied-network-317810/graphr-app:latest'
+  - 'eu.gcr.io/$PROJECT_ID/graphr-app:latest'
   - '.'
 
 # This step pushes the image to Container Registry
@@ -18,7 +18,22 @@ steps:
   id: Push
   args:
   - 'push'
-  - 'eu.gcr.io/storied-network-317810/graphr-app'
+  - 'eu.gcr.io/$PROJECT_ID/graphr-app'
+
+# deploy container image to Google Cloud Run
+- name: 'gcr.io/cloud-builders/gcloud'
+  id: Deploy
+  args:
+  - 'run'
+  - 'deploy'
+  - 'graphr-app'
+  - '--image'
+  - 'eu.gcr.io/$PROJECT_ID/graphr-app:$BUILD_ID'
+  - '--region'
+  - 'europe-north1'
+  - '--platform'
+  - 'managed'
+  - '--allow-unauthenticated'
 
 timeout: 7200s
 
