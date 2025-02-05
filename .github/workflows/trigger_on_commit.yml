@@ -74,14 +74,20 @@ jobs:
         echo "Current build tag:"
         echo $TAG
 
-    - name: Build the container image
-      run: |
-        docker build -f Dockerfile -t quay.io/michard/graphr:${{ env.TAG }} -t quay.io/michard/graphr:latest .
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v3
+  
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
 
-    - name: Push the container image to the target registry
-      run: |
-        docker push quay.io/michard/graphr:${{ env.TAG }}
-        docker push quay.io/michard/graphr:latest
+    - name: Build container image and push
+      uses: docker/build-push-action@v6
+      with:
+        context: .
+        file: Dockerfile
+        platforms: linux/amd64,linux/arm64
+        push: true
+        tags: quay.io/michard/graphr:${{ env.TAG }},quay.io/michard/graphr:latest
 
   notification:
     needs: build_and_push
