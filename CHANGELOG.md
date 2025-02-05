@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html) and to [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
 
+## 0.6.5 (2025-02-05)
+
+### Documentation
+- :robot: changelog file generated [`db22719`](https://github.com/smichard/graphR/commit/db22719)
+
+### Test
+- :white_check_mark: testing latest changes [`b2aa115`](https://github.com/smichard/graphR/commit/b2aa115)
+
+### Build
+- :bug: rocker base image only available for amd64 [`6e618b0`](https://github.com/smichard/graphR/commit/6e618b0)
+
 ## 0.6.4 (2025-02-05)
 
 ### Documentation
