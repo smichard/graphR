@@ -1,4 +1,5 @@
 # graphR.
+![GitHub workflow](https://github.com/github/docs/actions/workflows/trigger_on_commit.yml/badge.svg) 
 [![Docker Repository on Quay](https://quay.io/repository/michard/graphr/status "Docker Repository on Quay")](https://quay.io/repository/michard/graphr)
 
 <a href="https://www.graphr.de"><img src = "graphr/www/graphR_logo.png" width = "200" align="left"></a> 
@@ -33,8 +34,8 @@ To run **graphR.** you just need an environment that supports Docker containers.
 The easiest way to use **graphR.** is to pull the latest pre-build Docker container from [Dockerhub](https://hub.docker.com/r/smichard/graphr/) and run it within your environment. The following commands will download **graphR.** from Dockerhub and make it available on your environment using it's ip-address
 
 ```
-docker pull smichard/graphr
-docker run -d -p 80:3838 smichard/graphr
+docker pull quay.io/michard/graphr
+docker run -d -p 80:3838 quay.io/michard/graphr
 ```
 
 ## Customize
