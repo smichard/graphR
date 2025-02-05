@@ -169,38 +169,42 @@ server_rv <- function(input, output) {
         #plot_Host
         
         # Network Plot: VM's per Datacenter
-        # get new vertices and label
+        # Collect just Datacenter–VM, removing any duplicates:
         net_dc <- unique(data_sub$Datacenter)
-        new_vertices <- get_vertices(net_dc)
         network_label <- as.vector(net_dc)
-        # plot graph
-        tmp <- data_sub[, c("Datacenter", "VM")]
+        
+        tmp <- unique(data_sub[, c("Datacenter", "VM")])  # drop duplicate edges
         tmp.g <- graph_from_data_frame(d = tmp, directed = FALSE)
-        tmp.g <- add_vertices(tmp.g, length(net_dc), attr=new_vertices)
+        
+        # Merge parallel edges and remove self-loops (if any)
+        tmp.g <- simplify(tmp.g, remove.multiple = TRUE, remove.loops = TRUE)
         plot_network_VM <- ggnet2(tmp.g, color = "steelblue", alpha = 0.75, size = 5, edge.alpha = 0.5, edge.color = "grey", label.size = 4, label.alpha = 1, label.color = "black", label = network_label)
         #plot_network_VM
         
         # Network Plot: VM's per Host
-        # get new vertices and label
         net_host <- unique(data_sub$Host)
-        new_vertices <- get_vertices(net_host)
         network_label <- as.vector(net_host)
-        # plot graph
-        tmp <- data_sub[, c("Host", "VM")]
+        
+        # Remove duplicates so there's only one Host–VM edge per pair
+        tmp <- unique(data_sub[, c("Host", "VM")])
         tmp.g <- graph_from_data_frame(d = tmp, directed = FALSE)
-        tmp.g <- add_vertices(tmp.g, length(net_host), attr=new_vertices)
+        
+        # Merge parallel edges, remove self-loops (if any)
+        tmp.g <- simplify(tmp.g, remove.multiple = TRUE, remove.loops = TRUE)
         plot_network_Host <- ggnet2(tmp.g, color = "steelblue", alpha = 0.75, size = 5, edge.alpha = 0.5, edge.color = "grey", label.size = 4, label.alpha = 1, label.color = "black", label = network_label)
         #plot_network_Host
         
         # Network Plot: VM's per Network
-        # get new vertices and label
         net_network <- unique(data_sub$Network_1)
-        new_vertices <- get_vertices(net_network)
         network_label <- as.vector(net_network)
-        # plot graph
-        tmp <- data_sub[, c("Network_1", "VM")]
+        
+        # Remove duplicates so there's only one Network_1–VM edge per pair
+        tmp <- unique(data_sub[, c("Network_1", "VM")])
         tmp.g <- graph_from_data_frame(d = tmp, directed = FALSE)
-        tmp.g <- add_vertices(tmp.g, length(net_network), attr=new_vertices)
+        
+        # Merge parallel edges, remove self-loops (if any)
+        tmp.g <- simplify(tmp.g, remove.multiple = TRUE, remove.loops = TRUE)
+        
         plot_network_Network <- ggnet2(tmp.g, color = "steelblue", alpha = 0.75, size = 5, edge.alpha = 0.5, edge.color = "grey", label.size = 4, label.alpha = 1, label.color = "black", label = network_label)
         #plot_network_Network
         
