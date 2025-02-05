@@ -1,0 +1,103 @@
+name: on-commit
+on:
+  push:
+    paths:
+      - 'Dockerfile'
+      - 'graphr/**'
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+jobs:
+  bump_tag:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: '0'
+
+    - name: Bump version and push tag
+      # GitHub Action: https://github.com/marketplace/actions/github-tag-bump
+      uses: anothrNick/github-tag-action@1.71.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        DEFAULT_BUMP: patch
+        DEFAULT_BRANCH: main
+        WITH_V: false
+ 
+  changelog:
+    needs: bump_tag
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    name: Generate and Commit Changelog
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Generate Changelog
+      uses: smichard/conventional_changelog@2.0.8
+      with:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Set Git User Info
+      run: |
+        git config user.name 'GitHub Actions Bot'
+        git config user.email 'actions@github.com'
+
+    - name: Commit Changelog
+      run: |
+        git add CHANGELOG.md
+        git commit -m "docs: :robot: changelog file generated" || echo "No changes to commit"
+        git push
+
+  build_and_push:
+    needs: changelog
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Log in to target registry
+      run: |
+        echo ${{ secrets.TARGET_REGISTRY_PASSWORD }} | docker login quay.io -u ${{ secrets.TARGET_REGISTRY_USERNAME }} --password-stdin
+
+    - name: Get tag from bumped version
+      id: tag
+      run: |
+        # Fetch the latest changes
+        git fetch --tags
+        TAG=$(git describe --tags --abbrev=0 || echo "latest")
+        echo "TAG=$TAG" >> $GITHUB_ENV
+        echo "Current build tag:"
+        echo $TAG
+
+    - name: Build the container image
+      run: |
+        docker build -f Dockerfile -t quay.io/michard/graphr:${{ env.TAG }} -t quay.io/michard/graphr:latest .
+
+    - name: Push the container image to the target registry
+      run: |
+        docker push quay.io/michard/graphr:${{ env.TAG }}
+        docker push quay.io/michard/graphr:latest
+
+  notification:
+    needs: build_and_push
+    runs-on: ubuntu-latest
+    steps:
+      - name: notification
+        uses: s3krit/matrix-message-action@v0.0.3
+        with:
+          room_id: ${{ secrets.MATRIX_ROOM_ID }}
+          access_token: ${{ secrets.MATRIX_ACCESS_TOKEN }}
+          server: ${{ secrets.MATRIX_SERVER }}
+          message: |
+            "${{ github.repository }}":<br />
+            **new updates pushed to the repository — new container image build**<br />
+            commit message: **${{ github.event.head_commit.message }}** <br />
+            contributor: **${{ github.actor }}** <br />
+            commit sha: **${{ github.sha }}** <br />
+            commit history: **[link](https://github.com/${{ github.repository }}/commits/main)** <br />
+            image registry: **[Quay.io](https://quay.io/repository/michard/cities?tab=tags)** <br />

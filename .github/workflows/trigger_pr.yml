@@ -1,0 +1,22 @@
+name: on-pr
+
+on:
+  pull_request:
+
+jobs:
+  pr_trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: notification
+        uses: s3krit/matrix-message-action@v0.0.3
+        with:
+          room_id: ${{ secrets.MATRIX_ROOM_ID }}
+          access_token: ${{ secrets.MATRIX_ACCESS_TOKEN }}
+          server: ${{ secrets.MATRIX_SERVER }}
+          message: |
+            "${{ github.repository }}": rennovate bot triggered a PR<br />
+            **New pull request detected**<br />
+            PR Title: **${{ github.event.pull_request.title }}** <br />
+            Contributor: **${{ github.actor }}** <br />
+            PR URL: **[link](${{ github.event.pull_request.html_url }})** <br />
+            Commit SHA: **${{ github.event.pull_request.head.sha }}** <br />
