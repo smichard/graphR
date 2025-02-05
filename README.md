@@ -1,5 +1,5 @@
 # graphR.
-![GitHub workflow](https://github.com/github/docs/actions/workflows/trigger_on_commit.yml/badge.svg) 
+[![GitHub Workflow](https://github.com/smichard/graphR/actions/workflows/trigger_on_commit.yml/badge.svg?branch=master)](https://github.com/smichard/graphR/actions/workflows/trigger_on_commit.yml) 
 [![Docker Repository on Quay](https://quay.io/repository/michard/graphr/status "Docker Repository on Quay")](https://quay.io/repository/michard/graphr)
 
 <a href="https://www.graphr.de"><img src = "graphr/www/graphR_logo.png" width = "200" align="left"></a> 
