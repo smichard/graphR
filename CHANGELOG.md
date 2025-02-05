@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html) and to [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
 
+## 0.6.2 (2025-02-05)
+
+### Documentation
+- :memo: badge updated [`586b11e`](https://github.com/smichard/graphR/commit/586b11e)
+- :memo: ReadMe updated to reference quay.io registry, workflow badge added [`a845b6c`](https://github.com/smichard/graphR/commit/a845b6c)
+- :robot: changelog file generated [`dd4cac8`](https://github.com/smichard/graphR/commit/dd4cac8)
+
+### Test
+- :white_check_mark: testing latest changes and setup [`91a4c3a`](https://github.com/smichard/graphR/commit/91a4c3a)
+
+### Chore
+- update smichard/conventional_changelog action to v2.0.10 [`50d166d`](https://github.com/smichard/graphR/commit/50d166d)
+
+### Other
+- Merge pull request #8 from smichard/renovate/smichard-conventional_changelog-2.x [`5230be0`](https://github.com/smichard/graphR/commit/5230be0)
+
 ## 0.6.1 (2025-02-05)
 
 ### Feature
@@ -97,90 +113,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## 0.5.0 (2017-10-21)
 
-## 0.1.0 (2025-02-05)
-
-### Feature
-- :fire: optimizing Dockerfile [`b5471cf`](https://github.com/smichard/graphR/commit/b5471cf)
-- :rocket: file handling optimized to use tmp directory [`e51ff2a`](https://github.com/smichard/graphR/commit/e51ff2a)
-- :rocket: added deployment files for OpenShift [`248e0af`](https://github.com/smichard/graphR/commit/248e0af)
-- :construction: debugging [`5e6f056`](https://github.com/smichard/graphR/commit/5e6f056)
-
-### Bug Fixes
-- :bug: fixed ggnet error [`cf1875e`](https://github.com/smichard/graphR/commit/cf1875e)
-- :bug: resolved bug in cloudbuild file [`87ae872`](https://github.com/smichard/graphR/commit/87ae872)
-- :rocket: cloudbuild updated for automatic deployment [`34229c9`](https://github.com/smichard/graphR/commit/34229c9)
-- :bug: optimizing file handling [`7d52f8a`](https://github.com/smichard/graphR/commit/7d52f8a)
-- :bug: working on file handling [`6b4000c`](https://github.com/smichard/graphR/commit/6b4000c)
-- :fire: optimizing Dockerfile [`ca90967`](https://github.com/smichard/graphR/commit/ca90967)
-- :ambulance: optimizing Dockerfile [`0a86a4e`](https://github.com/smichard/graphR/commit/0a86a4e)
-- :bug: changed storage related calculation [`97a75ed`](https://github.com/smichard/graphR/commit/97a75ed)
-- :ambulance: working on deployment files [`47d6c43`](https://github.com/smichard/graphR/commit/47d6c43)
-- :ambulance: working on deployment files [`0fe4e1c`](https://github.com/smichard/graphR/commit/0fe4e1c)
-- debuging deployment for OpenShift and Google Cloud Run [`f56bc99`](https://github.com/smichard/graphR/commit/f56bc99)
-- :ambulance: debuging [`8eed104`](https://github.com/smichard/graphR/commit/8eed104)
-- :ambulance: adjusted to run on OpenShift and Google Cloud Run [`a87fbca`](https://github.com/smichard/graphR/commit/a87fbca)
-- :bug: deployment fixed [`13322da`](https://github.com/smichard/graphR/commit/13322da)
-- :ambulance: debugging [`98daa4e`](https://github.com/smichard/graphR/commit/98daa4e)
-- :bug: debuging [`f17d9a4`](https://github.com/smichard/graphR/commit/f17d9a4)
-- :ambulance: debuging [`234e9db`](https://github.com/smichard/graphR/commit/234e9db)
-- :bug: debuging Dockerfile [`9954ffb`](https://github.com/smichard/graphR/commit/9954ffb)
-- :construction: testing [`0977d06`](https://github.com/smichard/graphR/commit/0977d06)
-- :construction: debugging [`1250aed`](https://github.com/smichard/graphR/commit/1250aed)
-- :bug: debuging [`68ca76c`](https://github.com/smichard/graphR/commit/68ca76c)
-- :bug: Dockerfile [`ca65fcf`](https://github.com/smichard/graphR/commit/ca65fcf)
-- :ambulance: debuging file handling [`6df1c12`](https://github.com/smichard/graphR/commit/6df1c12)
-- :bug: changed folder ownership [`47651e3`](https://github.com/smichard/graphR/commit/47651e3)
-- :ambulance: fixed path of shiny app [`d1a3424`](https://github.com/smichard/graphR/commit/d1a3424)
-- :ambulance: replaced deprecated functions [`7117cb7`](https://github.com/smichard/graphR/commit/7117cb7)
-- :ambulance: debuging file handling [`6b83ac9`](https://github.com/smichard/graphR/commit/6b83ac9)
-- :construction: debuging file handling [`4302bd3`](https://github.com/smichard/graphR/commit/4302bd3)
-- :construction: debuging file handling [`6332721`](https://github.com/smichard/graphR/commit/6332721)
-- :ambulance: optimized file handling [`9485234`](https://github.com/smichard/graphR/commit/9485234)
-- :ambulance: make sure report can be saved [`462e5c6`](https://github.com/smichard/graphR/commit/462e5c6)
-- :ambulance: working on port issues [`9d84bca`](https://github.com/smichard/graphR/commit/9d84bca)
-- :construction: set working directory of Dockercontainer [`4b20c3e`](https://github.com/smichard/graphR/commit/4b20c3e)
-- :ambulance: added packages to install [`5030480`](https://github.com/smichard/graphR/commit/5030480)
-- :ambulance: eliminated error while filehandling [`5f7075c`](https://github.com/smichard/graphR/commit/5f7075c)
-
-### Documentation
-- :memo: documentation updated for deployment options on OpenShift and Cloud Run [`dee99be`](https://github.com/smichard/graphR/commit/dee99be)
-
-### Build
-- :rocket: cloudbuild extended to automatically push to cloud run [`4654ea2`](https://github.com/smichard/graphR/commit/4654ea2)
-- :sparkles: added renovate configuration [`bcc6fd5`](https://github.com/smichard/graphR/commit/bcc6fd5)
-
-### Refactor
-- :fire: removed unnecessary files, refactor complete [`a7ef135`](https://github.com/smichard/graphR/commit/a7ef135)
-- :ambulance: debuging file generation [`004b7dd`](https://github.com/smichard/graphR/commit/004b7dd)
-- :sparkles: optimized function to save report [`c7e709d`](https://github.com/smichard/graphR/commit/c7e709d)
-- :construction: refactoring docker image [`e67cac7`](https://github.com/smichard/graphR/commit/e67cac7)
-- :construction: refactoring container image [`094e853`](https://github.com/smichard/graphR/commit/094e853)
-- :construction: refactoring Dockerfile [`0df9c1f`](https://github.com/smichard/graphR/commit/0df9c1f)
-- :construction: added updated shiny server package [`6fe4764`](https://github.com/smichard/graphR/commit/6fe4764)
-
 ### Other
-- test [`9aa840b`](https://github.com/smichard/graphR/commit/9aa840b)
-- test [`a4e2318`](https://github.com/smichard/graphR/commit/a4e2318)
-- test [`5b35c0a`](https://github.com/smichard/graphR/commit/5b35c0a)
-- fix: [`ad605f5`](https://github.com/smichard/graphR/commit/ad605f5)
-- fix: [`9ce46fc`](https://github.com/smichard/graphR/commit/9ce46fc)
-- Update README.md [`07bd9ad`](https://github.com/smichard/graphR/commit/07bd9ad)
-- Update README.md [`3e47902`](https://github.com/smichard/graphR/commit/3e47902)
-- optimized build time with base image [`8d8ab47`](https://github.com/smichard/graphR/commit/8d8ab47)
-- concourse pipeline deleted [`9ce3918`](https://github.com/smichard/graphR/commit/9ce3918)
-- cloud build adjusted for machine type [`6f7335b`](https://github.com/smichard/graphR/commit/6f7335b)
-- instructions and ReadMe adjusted for support info [`413554c`](https://github.com/smichard/graphR/commit/413554c)
-- test [`be8fd66`](https://github.com/smichard/graphR/commit/be8fd66)
-- instructions adjusted [`3befc94`](https://github.com/smichard/graphR/commit/3befc94)
-- cloudbuild added [`c75731e`](https://github.com/smichard/graphR/commit/c75731e)
-- vHost tab renamed [`2111c37`](https://github.com/smichard/graphR/commit/2111c37)
-- file added for troubleshooting [`927bc5c`](https://github.com/smichard/graphR/commit/927bc5c)
-- added function to troubleshot the import data [`4ecd37b`](https://github.com/smichard/graphR/commit/4ecd37b)
-- pipeline adjusted [`87d3e9f`](https://github.com/smichard/graphR/commit/87d3e9f)
-- pipeline cleaned up [`dcf6545`](https://github.com/smichard/graphR/commit/dcf6545)
-- pipeline adjusted [`1c2bec9`](https://github.com/smichard/graphR/commit/1c2bec9)
-- added twitter ressource to concourse pipeline [`9b6aa26`](https://github.com/smichard/graphR/commit/9b6aa26)
-- pipeline adjusted - manuell major minor removed [`9b94a47`](https://github.com/smichard/graphR/commit/9b94a47)
 - artifact script adjusted [`603bad8`](https://github.com/smichard/graphR/commit/603bad8)
 - concourse ci pipeline added [`a983640`](https://github.com/smichard/graphR/commit/a983640)
 - Dockerfile adjusted, networking diagrams available again, issue fixed [`2308235`](https://github.com/smichard/graphR/commit/2308235)
