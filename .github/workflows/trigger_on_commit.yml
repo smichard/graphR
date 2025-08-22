@@ -19,7 +19,7 @@ jobs:
 
     - name: Bump version and push tag
       # GitHub Action: https://github.com/marketplace/actions/github-tag-bump
-      uses: anothrNick/github-tag-action@1.71.0
+      uses: anothrNick/github-tag-action@1.75.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         DEFAULT_BUMP: patch
